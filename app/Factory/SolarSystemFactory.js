@@ -1,0 +1,195 @@
+/**
+ * SolarSystemFactory
+ */
+
+'use strict'
+
+import * as THREE from 'three';
+import randomColor from 'randomcolor';
+
+import Moon from '../Model/Moon';
+import Planet from '../Model/Planet';
+import Sun from '../Model/Sun';
+
+import OrbitController from '../Controller/OrbitController';
+import RenderController from '../Controller/RenderController';
+
+import Scene from '../Modules/Scene';
+
+import StarFactory from './StarFactory';
+import AsteroidBeltFactory from './AsteroidBeltFactory';
+import KuiperBeltFactory from './KuiperBeltFactory';
+
+function SolarSystemFactory(data) {
+    this.scene = new Scene();
+    this.data = data || {};
+    this.parent = data.parent || null;
+    this.planets = data.planets || [];
+
+    this.solarSystemObjects = {
+        sun: null,
+        planets: [],
+        moons: [],
+    }; 
+}
+
+SolarSystemFactory.prototype.build = function(data) {
+    return new Promise((resolve) => {
+        let startTime = new Date().getTime();
+
+        let sun = this.buildSun(data.parent);
+        this.solarSystemObjects.sun = sun;
+        this.scene.add(sun.threeObject);
+
+        let buildMap = {
+            '1': {
+                buildGroup: this.buildPlanets.bind(this, data.planets, sun),
+                timeout: 1000
+            },
+            '2': {
+                buildGroup: this.buildAsteroidBelt.bind(this, data),
+                timeout: 1000
+            },
+            '3': {
+                buildGroup: this.buildKuiperBelt.bind(this, data),
+                timeout: 1000
+            },
+            '4': {
+                buildGroup: this.buildStars.bind(this),
+                timeout: 1000
+            }
+        };
+
+        let buildGroupsCount = Object.keys(buildMap).length;
+        let i = 0;
+
+        function run() {
+            i++;
+
+            if (buildMap.hasOwnProperty(i)) {
+                setTimeout(()=>{
+                    buildMap[i].buildGroup.call().then((response) => {
+                        run.call(this);
+                    })
+                }, buildMap[i].timeout)
+            } else {
+                this.renderScene(startTime);
+                resolve();
+            }
+        }
+
+        run.call(this);
+    });
+};
+
+SolarSystemFactory.prototype.renderScene = function(startTime) {
+    let renderController = new RenderController(this.scene);
+    let focalpoint = this.scene;
+
+    focalpoint.add(this.scene.camera);
+    this.scene.camera.up.set(0, 0, 1);
+    this.scene.camera.position.set(60000,0,15000,);
+    this.scene.camera.lookAt(new THREE.Vector3(0, 0, 0));
+}
+
+SolarSystemFactory.prototype.buildMoons = function(planetData, planet) {
+    for(let i = 0; i < planetData.satellites.length; i++) {
+        let orbitColor = randomColor({
+            luminosity: 'light',
+            format: 'hex',
+            hue: 'blue'
+        });
+
+        let moon = new Moon(planetData.satellites[i], planet, planetData, orbitColor);
+        let orbitControlMoon = new OrbitController(moon)
+
+        this.solarSystemObjects.moons.push(moon);
+
+        planet._moons.push(moon);
+        planet.core.add(moon.orbitCentroid);
+    }
+}
+
+SolarSystemFactory.prototype.buildPlanet = function(data, sun) {
+    return new Promise((resolve) => {
+        let planet = new Planet(data, sun);
+        let orbitControllerPlanet = new OrbitController(planet);
+
+        this.scene.add(planet.orbitCentroid);
+        this.scene.add(planet.threeObject);
+
+        if (data.satellites.length) {
+            this.buildMoons(data, planet);
+        }
+
+        this.solarSystemObjects.planets.push(planet);
+
+        resolve(planet);
+    })
+}
+
+SolarSystemFactory.prototype.buildPlanets = function(planets, sun) {
+    return new Promise((resolve) => {
+        let promises = [];
+
+        for(let i = 0; i < planets.length; i++) {
+            promises.push(this.buildPlanet(planets[i], sun).then((planet) => {
+                this.solarSystemObjects.planets.push(planet);
+            }))
+        }
+
+        Promise.all(promises).then(()=> {
+            resolve({
+                group: 'planets'
+            })
+        })
+    })
+}
+
+SolarSystemFactory.prototype.buildSun = function(parentData) {
+    let sun = new Sun(parentData);
+
+    this.solarSystemObjects.sun = sun;
+
+    return sun;
+}
+
+SolarSystemFactory.prototype.buildStars = function() {
+    let starFactory = new StarFactory(this.scene);
+
+    return new Promise((resolve)=> {
+        starFactory.buildStarField().then(()=> {
+            resolve({
+                group: 'stars',
+            });
+        });
+    });
+};
+
+SolarSystemFactory.prototype.buildKuiperBelt = function(data) {
+    let kuiperBeltFactory = new KuiperBeltFactory(this.scene, data);
+
+    return new Promise((resolve)=> {
+        kuiperBeltFactory.build().then(()=> {
+            resolve({
+                group: 'kuiper',
+            });
+        })
+    });
+};
+
+SolarSystemFactory.prototype.buildAsteroidBelt = function(data) {
+    let asteroidBeltFactory = new AsteroidBeltFactory(this.scene, data);
+
+    return new Promise((resolve)=> {
+        asteroidBeltFactory.build().then(()=> {
+            resolve({
+                group: 'asteroids',
+            });
+        })
+    });
+};
+
+
+
+export default SolarSystemFactory;
