@@ -334,6 +334,7 @@ class Planet extends CelestialObject {
         line.position.set(0, 0, 0);
   
         this._core.add(line);
+        console.log(this._core);
   
         return line;
     }

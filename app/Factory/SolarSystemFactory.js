@@ -13,12 +13,14 @@ import Sun from '../Model/Sun';
 
 import OrbitController from '../Controller/OrbitController';
 import RenderController from '../Controller/RenderController';
+import keyboardController from '../Controller/KeyboardController';
 
 import Scene from '../Modules/Scene';
 
 import StarFactory from './StarFactory';
 import AsteroidBeltFactory from './AsteroidBeltFactory';
 import KuiperBeltFactory from './KuiperBeltFactory';
+import KeyboardController from '../Controller/KeyboardController';
 
 function SolarSystemFactory(data) {
     this.scene = new Scene();
@@ -84,7 +86,14 @@ SolarSystemFactory.prototype.build = function(data) {
 
 SolarSystemFactory.prototype.renderScene = function(startTime) {
     let renderController = new RenderController(this.scene);
+    let keyboardController = new KeyboardController({
+        scene: this.scene,
+        sceneObjects: this.solarSystemObjects
+    });
     let focalpoint = this.scene;
+
+    document.onkeypress = keyboardController.handleKeyDown.bind(keyboardController);
+    document.onkeyup = keyboardController.handleKeyUp.bind(keyboardController);
 
     focalpoint.add(this.scene.camera);
     this.scene.camera.up.set(0, 0, 1);
