@@ -11,7 +11,7 @@ class KuiperBeltFactory {
         this._distanceFromParentMax = data.kuiperBelt.distanceFromParent.max;
         this._distanceFromParentMedian = this.calculateDistanceFromParentMedian();
         this._texture = new THREE.TextureLoader().load('assets/textures/asteroid_dark.jpg');
-        this._orbitCentroid = new THREE.Object3D();
+        this._orbitCentroid = new THREE.Group();
         this._orbitRadian = 360 / 112897;
     }
 

@@ -12,7 +12,7 @@ class AsteroidBeltFactory {
         this._distanceFromParentMax = data.asteroidBelt.distanceFromParent.max;
         this._distanceFromParentMedian = this.calculateDistanceFromParentMedian();
         this._texture = new THREE.TextureLoader().load('assets/textures/asteroid.jpg');
-        this._orbitCentroid = new THREE.Object3D();
+        this._orbitCentroid = new THREE.Group();
         this._orbitRadian = 360 / 1681.6;
     }
 

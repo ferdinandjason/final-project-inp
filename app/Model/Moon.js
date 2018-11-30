@@ -17,7 +17,7 @@ class Moon extends CelestialObject {
         this._id = data.id || null;
         this._name = data.name || null;
         this._distanceFromParent = data.distanceFromParent || null;
-        this._orbitalPeriod = data.orbitalPeriod || null;
+        this._orbitalPeriod = Number.parseFloat(data.orbitalPeriod) || null;
         this._orbitalInclination = data.orbitalInclination || null; // to the equatorial plane of the parent object
         this._mass = data.mass || null;
         this._orbitColor = orbitColor || MOON_ORBIT_COLOR;
@@ -31,7 +31,7 @@ class Moon extends CelestialObject {
         this._threeParent = threeParent || null;   
 
         this._parentData = parentData || null;
-        this._orbitCentroid = new THREE.Object3D();
+        this._orbitCentroid = new THREE.Group();
         this._highlight = this.createHighlight();
 
         this.buildFullObject3D();

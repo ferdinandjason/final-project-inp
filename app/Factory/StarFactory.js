@@ -21,7 +21,7 @@ function getRandomPointInSphere(radius, x0, y0, z0) {
 
 class StarFactory {
     constructor(scene) {
-        this._starsCentriod = new THREE.Object3D();
+        this._starsCentriod = new THREE.Group();
         this._starsCount = 8000;
         this._threeDistanceFromParent = 14959787070 * 40000 * Constants.ORBIT_SCALE;
         this._texture = new THREE.TextureLoader().load('assets/textures/star.jpg');

@@ -14,7 +14,7 @@ class Asteroid extends CelestialObject {
         this._id = index || String(Math.random()).slice(1, 4);
         this._threeObject = this.createGeometry();
         this._orbitInclination = this.createHypotheticalOrbitInclination(index);// (Math.random() * this._randomNumberGenerator.getRandomNumberWithinRange(1, 15) / 90);
-        this._orbitCentroid = new THREE.Object3D();
+        this._orbitCentroid = new THREE.Group();
         this._orbitCentroid.rotation.x = this._orbitInclination;
         this._orbitCentroid.add(this._threeObject);
     }

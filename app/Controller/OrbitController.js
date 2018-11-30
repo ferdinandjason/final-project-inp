@@ -12,26 +12,9 @@ import * as THREE from 'three';
 
 const COORDINATE_PRECISION = 12;
 
-function getTimeAsDecimal(){
-    let date = new Date();
-    let onejan = new Date(date.getFullYear(), 0, 1);
-
-    let dayOfYear = Math.ceil((this - onejan) / 86400000);
-
-    let timeString      = new Date(Date.now()).toDateString(),
-        hoursMinutes    = timeString.split(/[.:]/),
-        hours           = Number.parseInt(hoursMinutes[0], 10),
-        minutes         = hoursMinutes[1] ? Number.parseInt(hoursMinutes[1], 10) : 0;
-
-    let timeDecimal = hours + minutes / 60;
-
-    return dayOfYear + timeDecimal / 24;
-}
-
 class OrbitController {
     constructor(object) {
         this._object = object;
-        this._threePlanet = object.threeObject;
         this._distanceFromParent = object.threeDistanceFromParent;
         this._segmentsInDay = 1;
         this._currentDay = 1;
@@ -39,8 +22,13 @@ class OrbitController {
         this._degreesToRotate = 0.1 * Math.PI / 180;
         this._orbitPositionOffset = object.orbitPositionOffset || 0;
         this._theta = 0;
+        this._date = new Date();
 
         this.initListeners();
+
+        console.log(this._orbitAmplitude, this._object.name);
+
+        this._first = true;
     }
 
     initListeners() {
@@ -52,28 +40,51 @@ class OrbitController {
     }
 
     positionObject() {
-        let dayOfYear = new Date().getDOYwithTimeAsDecimal();
+        let dayOfYear = this._date.getDOYwithTimeAsDecimal();
         let time = (dayOfYear + (clock.getElapsedTime() / 60)) + this._orbitPositionOffset;
         let theta = THREE.Math.degToRad(time * (360 / this._object.orbitalPeriod));
-
+        
         let x = this._orbitAmplitude * Math.cos(theta);
         let y = this._orbitAmplitude * Math.sin(theta);
+
+        if(this._first === true && this._object.name === "Mercury"){
+            console.log(theta, time, (360 / this._object.orbitalPeriod))
+            console.log(x, y)
+            this._first = false;
+        }
 
         this._object.theta = theta;
 
         x = Number.parseFloat(x.toFixed(COORDINATE_PRECISION));
         y = Number.parseFloat(y.toFixed(COORDINATE_PRECISION));
 
-        this._threePlanet.position.set(x, y, 0);
+        this._object.threeObject.position.set(x, y, 0);
         this._object.core.position.set(x, y, 0);
 
-        if (this._object.objectCentroid) {
-            this._object.objectCentroid.position.set(x, y, 0);
+        // if (this._object.objectCentroid) {
+        //     this._object.objectCentroid.position.set(x, y, 0);
+        // }
+        
+        this.setOrbitInclination();
+
+        var timeParsed = Number.parseInt(time);
+
+        if (timeParsed > 0 && timeParsed % 60 === 0) {
+            clock = new Clock(true);
         }
     }
 
     rotateObject(){
-        this._threePlanet.rotation.z += this._degreesToRotate;
+        this._object.threeObject.rotation.z += this._degreesToRotate;
+    }
+
+    setOrbitInclination() {
+        this._object.orbitCentroid.rotation.set(THREE.Math.degToRad(this._object.orbitalInclination), 0, 0);
+        this._object.orbitCentroid.updateMatrixWorld();
+        // if(this._object.name === "Mercury"){
+        //     console.log(this._object.orbitCentroid);
+        //     console.log(this._object)
+        // }
     }
 }
 

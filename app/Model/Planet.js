@@ -20,7 +20,7 @@ class Planet extends CelestialObject {
         this._rotationPeriod = data.rotationPeriod || null;
         this._lengthOfDay = data.lengthOfDay || null;
         this._distanceFromParent = data.distanceFromParent || null;
-        this._orbitalPeriod = data.orbitalPeriod || null;
+        this._orbitalPeriod = Number.parseFloat(data.orbitalPeriod) || null;
         this._orbitalVelocity = data.orbitalVelocity || null;
         this._orbitalInclination = data.orbitalInclination || null; // to the ecliptic plane
         this._axialTilt = data.axialTilt || null;
@@ -37,7 +37,7 @@ class Planet extends CelestialObject {
         this._threeParent = threeParent || null;
         this._moons = [];
         this._theta = 0;
-        this._orbitCentroid = new THREE.Object3D();
+        this._orbitCentroid = new THREE.Group();
         this._highlight = this.createHighlight();
 
         if (data.rings) {
@@ -156,12 +156,18 @@ class Planet extends CelestialObject {
         this.setAxes();
 
         this._orbitLine = new Orbit(this);
+        // this._orbitCentroid.add(this._threeObject);
         this._orbitCentroid.add(
             this._threeObject,
             this._core,
             this._orbitLine.orbit,
             this._objectCentroid
         );
+
+        this._threeObject.name = "THREE OBJ";
+        this._core.name = "CORE";
+        this._orbitLine.orbit.name = "ASD";
+        this._objectCentroid.name = "OBJ CENTROID";
     }
 
     createThreeDiameter() {
@@ -274,8 +280,8 @@ class Planet extends CelestialObject {
     }
 
     createRingGeometry(data) {
-        const INNER_RADIUS = THREE.Math.degToRad(data.rings.innerRadius);
-        const OUTER_RADIUS = THREE.Math.degToRad(data.rings.outerRadius);
+        const INNER_RADIUS = Constants.CELESTIAL_SCALE * data.rings.innerRadius;
+        const OUTER_RADIUS = Constants.CELESTIAL_SCALE * data.rings.outerRadius;
         const THETA_SEGMENTS = 180;
         let geometry = new RadialRingGeometry(
           INNER_RADIUS,

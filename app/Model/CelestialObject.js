@@ -8,8 +8,8 @@ class CelestialObject {
         this._mass = mass || 1;
         this._gravity = gravity || 1;
         this._density = density || 1;
-        this._core = new THREE.Object3D();
-        this._objectCentroid = new THREE.Object3D();
+        this._core = new THREE.Group();
+        this._objectCentroid = new THREE.Group();
     }
 
     /**

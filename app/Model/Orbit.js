@@ -9,7 +9,8 @@ class Orbit {
         this._object = object;
         this._color = color || new THREE.Color(ORBIT_COLOR);
         this._orbit = this.createOrbit();
-        this.setOrbitInclination();
+
+        console.log(this._object.threeParent.threeRadius + this._object.threeDistanceFromParent, this._object.name)
     }
 
     /**
@@ -33,14 +34,14 @@ class Orbit {
         let length = 360 / resolution;
         let orbitLine = new THREE.Geometry();
         let material = new THREE.LineBasicMaterial({
-            color: this.color,
+            color: this._color,
             linewidth: 1,
             fog : true,
         });
-        let orbitAmplitude = this._object.threeParent.threeRadius + this._object.threeDistanceFromParent;
 
         for (let i = 0; i <= resolution; i++){
-            let segment = (i * length) * Math.PI / 180;
+            let segment = THREE.Math.degToRad(i * length)
+            let orbitAmplitude = this._object.threeParent.threeRadius + this._object.threeDistanceFromParent;
 
             orbitLine.vertices.push(
                 new THREE.Vector3(
@@ -49,6 +50,9 @@ class Orbit {
                     0
                 )
             );
+            if(this._object.name === "Mercury"){
+                console.log(Math.cos(segment)*orbitAmplitude, Math.sin(segment)*orbitAmplitude," ", segment, i)
+            }
         }
 
         let line = new THREE.Line(orbitLine, material);
@@ -56,10 +60,6 @@ class Orbit {
         line.position.set(0, 0, 0);
 
         return line;
-    }
-
-    setOrbitInclination() {
-        this._object.orbitCentroid.rotation.x = THREE.Math.degToRad(this._object.orbitalInclination);
     }
 }
 

@@ -125,7 +125,6 @@ SolarSystemFactory.prototype.buildPlanet = function(data, sun) {
         let orbitControllerPlanet = new OrbitController(planet);
 
         this.scene.add(planet.orbitCentroid);
-        this.scene.add(planet.threeObject);
 
         if (data.satellites.length) {
             this.buildMoons(data, planet);

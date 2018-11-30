@@ -1,6 +1,7 @@
 'use strict'
 
 import * as THREE from 'three';
+import SceneUtils from '../Utils/Scene';
 
 const ORBIT_COLOR_DEFAULT = '#424242';
 const ORBIT_COLOR_HIGHLIGHT = '#197eaa';
@@ -9,6 +10,7 @@ const ORBIT_COLOR_ACTIVE = '#3beaf7';
 class KeyboardController {
     constructor(options){
         this.scene = options.scene || null;
+        this.camera = options.scene.camera;
         this.sceneObjects = options.sceneObjects || {};
         this.lastKeyCode = 0;
         this.isTravel = false;
@@ -42,13 +44,68 @@ class KeyboardController {
         this.lastKeyCode = event.keyCode;
     }
 
+    calculateDestinationCoordinates(planetWorldPosition, target){
+        var x = planetWorldPosition.x;
+        var y = planetWorldPosition.y;
+        var z = planetWorldPosition.z;
+
+        var destinationX = x;
+        var destinationY = y;
+        var destinationZ = z;
+
+        var quadrant1 = x > 0 && y > 0;
+        var quadrant2 = x < 0 && y > 0;
+        var quadrant3 = x < 0 && y < 0;
+        var quadrant4 = x > 0 && y < 0;
+
+        var offset = target.threeDiameter > 3 ? target.threeDiameter * 3 : target.threeDiameter * 3;
+
+        if (quadrant1) {
+            destinationX = destinationX + offset;
+            destinationY = destinationY + offset;
+        }
+
+        if (quadrant2) {
+            destinationX = destinationX - offset;
+            destinationY = destinationY + offset;
+        }
+
+        if (quadrant3) {
+            destinationX = destinationX - offset;
+            destinationY = destinationY - offset;
+        }
+
+        if (quadrant4) {
+            destinationX = destinationX + offset;
+            destinationY = destinationY - offset;
+        }
+
+        return {
+            x: destinationX,
+            y: destinationY,
+            z: destinationZ + (target.threeDiameter * 0.15)
+        }
+    }
+
     travel(id){
+        this.scene.updateMatrixWorld();
         let target = this.matchTarget(id-48);
-        console.log(target.threeObject.position);
-        this.scene.camera.position.x = target.threeObject.position.x - 5;
-        this.scene.camera.position.y = target.threeObject.position.y - 0;
-        this.scene.camera.position.z = target.threeObject.position.z - 0;
-        this.scene.camera.lookAt(target.threeObject.position);
+        
+        let planetWorldPosition = new THREE.Vector3();
+        planetWorldPosition.setFromMatrixPosition( target.threeObject.matrixWorld );
+
+        let destination = this.calculateDestinationCoordinates(planetWorldPosition, target);
+
+        // SceneUtils.detach(this.camera, this.camera.parent, this.scene);
+        // SceneUtils.attach(this.camera, this.scene, target.orbitCentroid);
+
+        // target.core.updateMatrixWorld();
+        // target.orbitCentroid.updateMatrixWorld();
+
+        this.camera.position.x = destination.x;
+        this.camera.position.y = destination.y;
+        this.camera.position.z = destination.z;
+        this.camera.lookAt(planetWorldPosition);
     }
 
     handleKeyUp(event) {
