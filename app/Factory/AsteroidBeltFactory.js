@@ -1,6 +1,5 @@
 'use strict'
 
-import * as THREE from 'three';
 import Constants from '../Utils/Constants';
 
 class AsteroidBeltFactory {

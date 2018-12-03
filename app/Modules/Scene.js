@@ -1,7 +1,7 @@
 'use strict'
 
-import * as THREE from 'three';
-let OrbitControls = require('three-orbitcontrols')
+import OrbitControls from '../Utils/OrbitControls';
+
 
 const AMBIENT_LIGHT_COUNTS = 4;
 const DIRECTIONAL_LIGHT_COLOR = '0xFFFFFF';
@@ -13,13 +13,16 @@ class Scene extends THREE.Scene {
 
         this._sceneElement = document.getElementById('solar-system');
         this._camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.05, 5 * Math.pow(10, 13));
-        this._orbitControls = new OrbitControls(this._camera, this._sceneElement);
-        this._orbitControls.screenSpacePanning = true;
-        this._orbitControls.zoomSpeed = 0.5;
+        this._cameraWrapper = new THREE.Group();
+        this._cameraWrapper.add(this._camera);
+        // this._orbitControls = new OrbitControls(this._camera, this._sceneElement);
+        // this.controls = new THREE.DeviceOrientationControls(this._camera);
+        // this._orbitControls.screenSpacePanning = true;
+        // this._orbitControls.zoomSpeed = 0.5;
 
 
         this.setLights();
-        // this.setAxis();
+        this.setAxis();
     }
 
     get camera() {
@@ -28,6 +31,14 @@ class Scene extends THREE.Scene {
 
     get orbitControls() {
         return this._orbitControls
+    }
+
+    get cameraWrapper() {
+        return this._cameraWrapper
+    }
+
+    get sceneElement() {
+        return this._sceneElement   
     }
 
     setCamera() {
@@ -62,7 +73,8 @@ class Scene extends THREE.Scene {
     }
 
     setAxis() {
-        this.rotation.x = THREE.Math.degToRad(90);
+        this.rotation.x = THREE.Math.degToRad(-90);
+        this.rotation.y = THREE.Math.degToRad(22.5);
     }
 }
 

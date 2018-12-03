@@ -1,6 +1,5 @@
 'use strict'
 
-import * as THREE from 'three';
 import Constants from '../Utils/Constants';
 
 function getRandomPointInSphere(radius, x0, y0, z0) {

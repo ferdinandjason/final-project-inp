@@ -1,7 +1,5 @@
 'use strict'
 
-import * as THREE from 'three';;
-
 const ORBIT_COLOR = '#404040';
 
 class Orbit {

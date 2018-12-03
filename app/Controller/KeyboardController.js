@@ -1,6 +1,4 @@
 'use strict'
-
-import * as THREE from 'three';
 import SceneUtils from '../Utils/Scene';
 
 const ORBIT_COLOR_DEFAULT = '#424242';
@@ -80,11 +78,12 @@ class KeyboardController {
             destinationY = destinationY - offset;
         }
 
-        return {
-            x: destinationX,
-            y: destinationY,
-            z: destinationZ + (target.threeDiameter * 0.15)
-        }
+        let destination = new THREE.Vector3();
+        destination.x = destinationX;
+        destination.y = destinationY;
+        destination.z = destinationZ + (target.threeDiameter * 0.15);
+
+        return destination;
     }
 
     travel(id){
@@ -102,10 +101,14 @@ class KeyboardController {
         // target.core.updateMatrixWorld();
         // target.orbitCentroid.updateMatrixWorld();
 
-        this.camera.position.x = destination.x;
-        this.camera.position.y = destination.y;
-        this.camera.position.z = destination.z;
+        this.camera.position.set(destination.x, destination.y, destination.z);//.add(planetWorldPosition.clone())
+
+        // this.camera.position.x = destination.x;
+        // this.camera.position.y = destination.y;
+        // this.camera.position.z = destination.z;
         this.camera.lookAt(planetWorldPosition);
+
+        this.scene.orbitControls.target = planetWorldPosition.clone();
     }
 
     handleKeyUp(event) {

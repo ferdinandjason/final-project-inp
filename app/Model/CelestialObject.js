@@ -1,7 +1,5 @@
 'use strict'
 
-import * as THREE from 'three';
-
 class CelestialObject {
     constructor(diameter, mass, gravity, density) {
         this._diameter = diameter || 1;

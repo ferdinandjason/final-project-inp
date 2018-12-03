@@ -1,12 +1,24 @@
 'use strict'
 
-import * as THREE from 'three';;
-
 class RenderController {
     constructor(scene) {
         this._renderEngine = new THREE.WebGLRenderer();
+        this._renderEngine.vr.enabled = true;
+        document.body.appendChild( WEBVR.createButton( this._renderEngine ) );
         this._scene = scene;
         this._camera = scene.camera;
+
+        this._scene.sceneElement.appendChild(this._renderEngine.domElement)
+
+        this._controller = this._renderEngine.vr.getController(0);
+        this._scene.add(this._controller);
+        console.log(this._renderEngine.vr.getCamera(this._camera));
+
+        this._raycaster = new THREE.Raycaster();
+        this._raycaster.setFromCamera( { x: 0, y: 0 }, this._camera );
+
+        window.addEventListener( 'vrdisplaypointerrestricted', onPointerRestricted, false );
+		window.addEventListener( 'vrdisplaypointerunrestricted', onPointerUnrestricted, false );
 
         this.setFrame();
         
@@ -18,10 +30,10 @@ class RenderController {
     }
 
     render() {
-        requestAnimationFrame(this.render);
-        
-        document.dispatchEvent(new CustomEvent('frame'));
-        this._renderEngine.render(this._scene, this._camera);
+        this._renderEngine.setAnimationLoop(()=>{
+            document.dispatchEvent(new CustomEvent('frame'));
+            this._renderEngine.render(this._scene, this._camera);
+        })
     }
 
     setFrame() {
@@ -34,6 +46,29 @@ class RenderController {
             document.body.appendChild(this._renderEngine.domElement);
         }
     }
+}
+
+function onPointerRestricted() {
+
+    var pointerLockElement = renderer.domElement;
+    if ( pointerLockElement && typeof ( pointerLockElement.requestPointerLock ) === 'function' ) {
+        console.log('ASDASDASDASDASDASDASDASDASD');
+        pointerLockElement.requestPointerLock();
+
+    }
+
+}
+
+function onPointerUnrestricted() {
+
+    var currentPointerLockElement = document.pointerLockElement;
+    var expectedPointerLockElement = renderer.domElement;
+    if ( currentPointerLockElement && currentPointerLockElement === expectedPointerLockElement && typeof ( document.exitPointerLock ) === 'function' ) {
+
+        document.exitPointerLock();
+
+    }
+
 }
 
 export default RenderController;

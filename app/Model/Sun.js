@@ -1,7 +1,5 @@
 'use strict'
 
-import * as THREE from 'three';;
-
 import CelestialObject from  './CelestialObject';
 
 import Constants from  '../Utils/Constants';

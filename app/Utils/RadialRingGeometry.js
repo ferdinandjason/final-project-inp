@@ -1,5 +1,3 @@
-import * as THREE from 'three';
-
 function RadialRingGeometry(innerRadius, outerRadius, thetaSegments) {
     THREE.Geometry.call(this);
 

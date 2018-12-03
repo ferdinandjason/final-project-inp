@@ -8,8 +8,6 @@ let prevTime = 0;
 window.clock.start();
 window.clock.stop();
 
-import * as THREE from 'three';
-
 const COORDINATE_PRECISION = 12;
 
 class OrbitController {
