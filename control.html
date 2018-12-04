@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Control</title>
+</head>
+<body>
+    <button id='Merkurius'>1</button>
+    <button id='Venus'>2</button>
+    <button id='Earth'>3</button>
+    <button id='Mars'>4</button>
+    <script src="http://10.151.34.209:8080/socket.io.js"></script>
+    <script>
+        'use strict'
+        var socket = new io();
+
+        socket.connect('http://10.151.34.209:8080'); 
+
+        // Add a connect listener
+        socket.on('connect',function() {
+            console.log('Client has connected to the server!');
+        });
+        // Add a connect listener
+        socket.on('message',function(data) {
+            console.log('Received a message from the server!',data);
+        });
+        // Add a disconnect listener
+        socket.on('disconnect',function() {
+            console.log('The client has disconnected!');
+        });
+
+        // Sends a message to the server via sockets
+        function sendMessageToServer(message) {
+            socket.emit('message', message);
+        };
+
+        function clickButton(event){
+            console.log(event)
+        }
+
+        function travelToPlanet(id){
+            socket.emit('travel', id)
+        }
+
+        var button = document.getElementById('Merkurius');
+        button.onclick = (event) => {
+            console.log(event.srcElement.id)
+        }
+
+        sendMessageToServer('halowwwwwwwwwwwww');
+    </script>
+</body>
+</html>
