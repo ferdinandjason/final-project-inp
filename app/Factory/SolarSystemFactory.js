@@ -123,6 +123,140 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
 
     document.onkeypress = keyboardController.handleKeyDown.bind(keyboardController);
     document.onkeyup = keyboardController.handleKeyUp.bind(keyboardController);
+
+    //text for object name
+
+    var text = "Merkurius",
+        height = 20,
+        size = 50,
+        hover = 30,
+        curveSegments = 4,
+        bevelThickness = 2,
+        bevelSize = 1.5,
+        bevelEnabled = true,
+        font = undefined;
+        // fontName = "helvetiker",
+        // fontWeight = "bold";
+
+    var pointLight = new THREE.PointLight( 0xffffff, 1.5 );
+    pointLight.position.set( 0, 100, 90 );
+    this.scene.add( pointLight );
+
+    function decimalToHex( d ) {
+        var hex = Number( d ).toString( 16 );
+        hex = "000000".substr( 0, 6 - hex.length ) + hex;
+        return hex.toUpperCase();
+    }
+
+    var hex, materials, group, textGeo, textMesh1, textMesh2;
+    var mirror = true;
+
+    function createText(){
+    textGeo = new THREE.TextGeometry( text, {
+        font: font,
+        size: size,
+        height: height,
+        curveSegments: curveSegments,
+        bevelThickness: bevelThickness,
+        bevelSize: bevelSize,
+        bevelEnabled: bevelEnabled
+    } );
+    textGeo.computeBoundingBox();
+    textGeo.computeVertexNormals();
+    
+    if ( ! bevelEnabled ) {
+        var triangleAreaHeuristics = 0.1 * ( height * size );
+        for ( var i = 0; i < textGeo.faces.length; i ++ ) {
+            var face = textGeo.faces[ i ];
+            if ( face.materialIndex == 1 ) {
+                for ( var j = 0; j < face.vertexNormals.length; j ++ ) {
+                    face.vertexNormals[ j ].z = 0;
+                    face.vertexNormals[ j ].normalize();
+                }
+                var va = textGeo.vertices[ face.a ];
+                var vb = textGeo.vertices[ face.b ];
+                var vc = textGeo.vertices[ face.c ];
+                var s = THREE.GeometryUtils.triangleArea( va, vb, vc );
+                if ( s > triangleAreaHeuristics ) {
+                    for ( var j = 0; j < face.vertexNormals.length; j ++ ) {
+                        face.vertexNormals[ j ].copy( face.normal );
+                    }
+                }
+            }
+        }
+    }
+    var centerOffset = - 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+    textGeo = new THREE.BufferGeometry().fromGeometry( textGeo );
+    textMesh1 = new THREE.Mesh( textGeo, materials );
+    textMesh1.position.x = centerOffset;
+    textMesh1.position.y = hover;
+    textMesh1.position.z = 0;
+    textMesh1.rotation.x = 0;
+    textMesh1.rotation.y = Math.PI * 2;
+    group.add( textMesh1 );
+    if ( mirror ) {
+        textMesh2 = new THREE.Mesh( textGeo, materials );
+        textMesh2.position.x = centerOffset;
+        textMesh2.position.y = - hover;
+        textMesh2.position.z = -70;
+        textMesh2.rotation.x = Math.PI;
+        textMesh2.rotation.y = Math.PI * 2;
+        group.add( textMesh2 );
+    }
+    console.log("text created !");
+    console.log(textGeo);
+    // textGeo.position.z = -100;
+    // console.log("after z updated");
+    }
+    function loadFont() {
+        var loader = new THREE.FontLoader();
+        loader.load( '../assets/font/helvetiker_bold.typeface.json', function ( response ) {
+            font = response;
+            createText();
+        } );
+    }
+
+    var hash = document.location.hash.substr( 1 );
+    if ( hash.length !== 0 ) {
+        var colorhash = hash.substring( 0, 6 );
+        var fonthash = hash.substring( 6, 7 );
+        var weighthash = hash.substring( 7, 8 );
+        var bevelhash = hash.substring( 8, 9 );
+        var texthash = hash.substring( 10 );
+        hex = colorhash;
+        pointLight.color.setHex( parseInt( colorhash, 16 ) );
+        // fontName = reverseFontMap[ parseInt( fonthash ) ];
+        // fontWeight = reverseWeightMap[ parseInt( weighthash ) ];
+        bevelEnabled = parseInt( bevelhash );
+        text = decodeURI( texthash );
+        // updatePermalink();
+    } else {
+        pointLight.color.setHSL( Math.random(), 1, 0.5 );
+        hex = decimalToHex( pointLight.color.getHex() );
+    }
+    materials = [
+        new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } ), // front
+        new THREE.MeshPhongMaterial( { color: 0xffffff } ) // side
+    ];
+    group = new THREE.Group();
+    group.position.y = 100;
+    this.scene.camera.add( group );
+
+    loadFont();
+    // var loader = new THREE.FontLoader();
+    // loader.laod('../assets/font/helvetiker_bold.typeface.json', function(font){
+    //     var geom = new THREE.TextGeometry('planet Merkurius', {
+    //         font: font,
+    //         size: 80,
+    //         height: 5,
+    //         curveSegments: 12,
+    //         bevelEnabled: true,
+    //         bevelThickness: 10,
+    //         bevelSize: 8,
+    //         bevelSegments: 5
+    //     });
+    // });
+    console.log("after text created");
 }
 
 SolarSystemFactory.prototype.buildMoons = function(planetData, planet) {
