@@ -100,14 +100,19 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
 
     console.log(this.scene.camera, "camera")
     this.scene.camera.add(crosshair);
-    this.scene.cameraWrapper.up = new THREE.Vector3(-1, 0, 0);
+    
     // this.scene.cameraWrapper.rotation.z = THREE.Math.degToRad(115)
     // this.scene.cameraWrapper.rotation.x = THREE.Math.degToRad(-30) 
     // this.scene.cameraWrapper.rotation.z = THREE.Math.degToRad(90)
     this.scene.cameraWrapper.position.set(60000,0,15000);
     
     this.scene.cameraWrapper.lookAt(new THREE.Vector3())
+
+    this.scene.cameraWrapper.rotation.x = THREE.Math.degToRad(-90);
+
     this.scene.cameraWrapper.updateMatrixWorld();
+
+    console.log('camera desu', this.scene.cameraWrapper.uuid);
 
     this.scene.add(this.scene.cameraWrapper)
 
@@ -264,16 +269,15 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
     console.log("after text created");
 
     // infografis
-    let sprite = new THREE.TextSprite({
-        textSize: 10,
-        texture: {
-            text: 'Hello World!',
-            fontFamily: 'Arial, Helvetica, sans-serif',
-        },
-        material: {color: 0xffbbff},
-    });
-    this.scene.add(sprite);
-    }
+    // let sprite = new THREE.TextSprite({
+    //     textSize: 10,
+    //     texture: {
+    //         text: 'Hello World!',
+    //         fontFamily: 'Arial, Helvetica, sans-serif',
+    //     },
+    //     material: {color: 0xffbbff},
+    // });
+    // this.scene.add(sprite);
 }
 
 SolarSystemFactory.prototype.buildMoons = function(planetData, planet) {

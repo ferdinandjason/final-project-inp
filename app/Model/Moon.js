@@ -221,8 +221,8 @@ class Moon extends CelestialObject {
 
         return new THREE.MeshLambertMaterial({
             map: map,
-            bumpMap: bumpMap || null,
-            bumpScale: bumpMap ? 0.012 : null,
+            // bumpMap: bumpMap || null,
+            // bumpScale: bumpMap ? 0.012 : null,
         });
     }
 }

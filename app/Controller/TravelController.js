@@ -37,23 +37,23 @@ class TravelController {
         var offset = target.threeDiameter > 3 ? target.threeDiameter * 3 : target.threeDiameter * 3;
 
         if (quadrant1) {
-            destinationX = destinationX + offset;
-            destinationY = destinationY + offset;
+            destinationX = destinationX - offset;
+            destinationY = destinationY - offset;
         }
 
         if (quadrant2) {
-            destinationX = destinationX - offset;
-            destinationY = destinationY + offset;
+            destinationX = destinationX + offset;
+            destinationY = destinationY - offset;
         }
 
         if (quadrant3) {
-            destinationX = destinationX - offset;
-            destinationY = destinationY - offset;
+            destinationX = destinationX + offset;
+            destinationY = destinationY + offset;
         }
 
         if (quadrant4) {
-            destinationX = destinationX + offset;
-            destinationY = destinationY - offset;
+            destinationX = destinationX - offset;
+            destinationY = destinationY + offset;
         }
 
         let destination = new THREE.Vector3();
@@ -66,10 +66,8 @@ class TravelController {
 
     prepareForTravel(takeOffHeight, targetObject) {
         var travelDuration = 3000;
-        console.log(this.camera.position);
-        console.log(this.scene);
-        console.log(new THREE.Vector3().setFromMatrixPosition(this.camera.matrixWorld));
-        console.log(this.camera);
+        console.log('qweqweqweqweqwe', THREE.Math.radToDeg(this.camera.rotation.x), THREE.Math.radToDeg(this.camera.rotation.y), THREE.Math.radToDeg(this.camera.rotation.z));
+        console.log(this.camera.uuid);
   
         return new TWEEN.Tween(this.camera.position)
           .to({
@@ -87,11 +85,15 @@ class TravelController {
     travelToPlanet(targetObject, takeOffHeight) {
         let travelDuration = 5000;
 
-        this.scene.updateMatrixWorld();
+        //this.scene.updateMatrixWorld();
+        console.log(this.camera.rotation);
+        console.log(this.camera.uuid);
 
         let planetWorldPosition = new THREE.Vector3();
+        
         planetWorldPosition.setFromMatrixPosition( targetObject.threeObject.matrixWorld );
 
+        this.camera.up = new THREE.Vector3(-1, 0, 0);
         this.camera.lookAt(planetWorldPosition);
 
         let destinationCoordinates  = this.calculateDestinationCoordinates(planetWorldPosition, targetObject);
@@ -99,35 +101,45 @@ class TravelController {
 
         let cameraTarget = targetObject instanceof Moon? targetObject.core : targetObject.objectCentroid;
 
+        let deviationInX = this.camera.rotation.x
+
         return takeOff.start().onComplete(()=> {
             var cameraTween = new TWEEN.Tween(this.camera.position)
                 .to(destinationCoordinates, travelDuration)
-                .easing(TWEEN.Easing.Cubic.InOut)
+                .easing(TWEEN.Easing.Sinusoidal.In)
                 .onUpdate(function(currentAnimationPosition){
-                    let planetWorldPosition = new THREE.Vector3();
-                    planetWorldPosition.setFromMatrixPosition( targetObject.threeObject.matrixWorld );
-                    let destinationCoordinates = this.calculateDestinationCoordinates(planetWorldPosition, targetObject);
+                    console.log('asdasdasdasdasd', THREE.Math.radToDeg(this.camera.rotation.x), THREE.Math.radToDeg(this.camera.rotation.y), THREE.Math.radToDeg(this.camera.rotation.z));
+                    console.log(this.camera.uuid);
 
-                    cameraTween.to(destinationCoordinates);
+                    //cameraTween.to(destinationCoordinates);
 
                     this.camera.lookAt(planetWorldPosition);
+                    
+                    
+                    console.log(deviationInX,this.camera.rotation.x)
+                    this.camera.rotation.x += (deviationInX - this.camera.rotation.x);
+                    deviationInX = this.camera.rotation.x
+
                     this.camera.updateMatrixWorld();
 
-                    if (targetObject.highlight.geometry.boundingSphere.radius > targetObject.threeDiameter / 2.25) {
-                        this.updateTargetHighlight(targetObject);
-                    }
+                    // if (targetObject.highlight.geometry.boundingSphere.radius > targetObject.threeDiameter / 2.25) {
+                    //     this.updateTargetHighlight(targetObject);
+                    // }
                 }.bind(this))
-                .onComplete(this.handleComplete.bind(this, targetObject, cameraTarget))
-                .start();   
+                .onComplete(this.handleComplete.bind(this, targetObject, cameraTarget, deviationInX))
+                .start();  
+                
         });
     }
 
-    handleComplete(targetObject, cameraTarget){
+    handleComplete(targetObject, cameraTarget, deviationInX){
         cameraTarget = cameraTarget || targetObject.objectCentroid;
         let planetWorldPosition = new THREE.Vector3();
         planetWorldPosition.setFromMatrixPosition( targetObject.threeObject.matrixWorld );
-
+        
+        
         this.camera.lookAt(planetWorldPosition);
+        this.camera.rotation.x += THREE.Math.degToRad(-105)
         this.camera.updateMatrixWorld();
         console.log(this.scene);
 
@@ -135,7 +147,7 @@ class TravelController {
         console.log(this.scene);
         console.log(new THREE.Vector3().setFromMatrixPosition(this.camera.matrixWorld));
         console.log(this.camera);
-
+        
     }
 
     updateTargetHighlight(target) {
