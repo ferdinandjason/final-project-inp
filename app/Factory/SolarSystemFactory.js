@@ -129,12 +129,13 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
     //text for object name
 
     var text = "Merkurius",
-        height = 20,
-        size = 50,
-        hover = 30,
+        height = 1, //height kebelakang
+        size = 6,
+        hover = 89, //makin besar, makin kebawah
         curveSegments = 4,
-        bevelThickness = 2,
-        bevelSize = 1.5,
+        bevelThickness = 0.07,
+        bevelSize = 0.27, //tumpukan makin besar
+        bevelSegments = 7, // makin halus
         bevelEnabled = true,
         font = undefined;
         // fontName = "helvetiker",
@@ -200,9 +201,11 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
         textMesh2 = new THREE.Mesh( textGeo, materials );
         textMesh2.position.x = centerOffset;
         textMesh2.position.y = - hover;
-        textMesh2.position.z = -70;
-        textMesh2.rotation.x = Math.PI;
+        textMesh2.position.z = -55;
+        textMesh2.rotation.x = THREE.Math.degToRad(180);
+        textMesh2.rotateX(THREE.Math.degToRad(180));
         textMesh2.rotation.y = Math.PI * 2;
+        // THREE.Math.degToRad()
         group.add( textMesh2 );
     }
     console.log("text created !");
@@ -259,6 +262,18 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
     //     });
     // });
     console.log("after text created");
+
+    // infografis
+    let sprite = new THREE.TextSprite({
+        textSize: 10,
+        texture: {
+            text: 'Hello World!',
+            fontFamily: 'Arial, Helvetica, sans-serif',
+        },
+        material: {color: 0xffbbff},
+    });
+    this.scene.add(sprite);
+    }
 }
 
 SolarSystemFactory.prototype.buildMoons = function(planetData, planet) {
