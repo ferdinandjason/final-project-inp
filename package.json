@@ -24,7 +24,8 @@
     "express": "^4.16.4",
     "randomcolor": "^0.5.3",
     "socket.io": "^2.2.0",
-    "three-orbitcontrols": "^2.96.3"
+    "three-orbitcontrols": "^2.96.3",
+    "three-text2d": "^0.4.1"
   },
   "devDependencies": {
     "webpack": "^4.25.1",
