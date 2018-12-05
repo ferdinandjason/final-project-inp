@@ -84,47 +84,49 @@ SolarSystemFactory.prototype.build = function(data) {
 };
 
 SolarSystemFactory.prototype.renderScene = function(startTime) {
-	//let focalpoint = this.scene;
+    //let focalpoint = this.scene;
 
-	//focalpoint.add(this.scene.camera);
+    //focalpoint.add(this.scene.camera);
 
-	let crosshair = new THREE.Mesh(
-		new THREE.RingBufferGeometry( 0.02, 0.04, 32 ),
-		new THREE.MeshBasicMaterial( {
-			color: 0xffffff,
-			opacity: 0.5,
-			transparent: true
-		} )
-	);
-	crosshair.position.z = -2;
+    let crosshair = new THREE.Mesh(
+        new THREE.RingBufferGeometry( 0.02, 0.04, 32 ),
+        new THREE.MeshBasicMaterial( {
+            color: 0xffffff,
+            opacity: 0.5,
+            transparent: true
+        } )
+    );
+    crosshair.position.z = -2;
 
-	console.log(this.scene.camera, "camera")
-	this.scene.camera.add(crosshair);
-	this.scene.cameraWrapper.rotation.z = THREE.Math.degToRad(115)
-	this.scene.cameraWrapper.rotation.x = THREE.Math.degToRad(-30) 
-	this.scene.cameraWrapper.rotation.y = THREE.Math.degToRad(60)
-	this.scene.cameraWrapper.position.set(60000,0,15000);
-	
-	this.scene.cameraWrapper.updateMatrixWorld();
+    console.log(this.scene.camera, "camera")
+    this.scene.camera.add(crosshair);
+    this.scene.cameraWrapper.up = new THREE.Vector3(-1, 0, 0);
+    // this.scene.cameraWrapper.rotation.z = THREE.Math.degToRad(115)
+    // this.scene.cameraWrapper.rotation.x = THREE.Math.degToRad(-30) 
+    // this.scene.cameraWrapper.rotation.z = THREE.Math.degToRad(90)
+    this.scene.cameraWrapper.position.set(60000,0,15000);
+    
+    this.scene.cameraWrapper.lookAt(new THREE.Vector3())
+    this.scene.cameraWrapper.updateMatrixWorld();
 
-	this.scene.add(this.scene.cameraWrapper)
+    this.scene.add(this.scene.cameraWrapper)
 
-	// this.scene.rotation.x = 90
-	// this.scene.rotation.y = 30
-	// this.scene.rotation.z = 270
+    // this.scene.rotation.z = THREE.Math.degToRad(90)
+    // this.scene.rotation.y = 30
+    // this.scene.rotation.z = 270
 
-	console.log(crosshair);
+    console.log(crosshair);
 
-	let renderController = new RenderController(this.scene);
-	let keyboardController = new KeyboardController({
-		scene: this.scene,
-		sceneObjects: this.solarSystemObjects
-	});
+    let renderController = new RenderController(this.scene);
+    let keyboardController = new KeyboardController({
+        scene: this.scene,
+        sceneObjects: this.solarSystemObjects
+    });
 
-	document.onkeypress = keyboardController.handleKeyDown.bind(keyboardController);
-	document.onkeyup = keyboardController.handleKeyUp.bind(keyboardController);
+    document.onkeypress = keyboardController.handleKeyDown.bind(keyboardController);
+    document.onkeyup = keyboardController.handleKeyUp.bind(keyboardController);
 
-	//text for object name
+    //text for object name
 
 	var text = "Merkurius",
 		height = 1, //height kebelakang

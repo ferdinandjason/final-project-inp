@@ -307,7 +307,6 @@ TWEEN.Tween.prototype = {
 	},
 
 	onUpdate: function onUpdate(callback) {
-
 		this._onUpdateCallback = callback;
 		return this;
 

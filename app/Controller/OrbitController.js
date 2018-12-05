@@ -24,8 +24,6 @@ class OrbitController {
 
         this.initListeners();
 
-        console.log(this._orbitAmplitude, this._object.name);
-
         this._first = true;
     }
 
@@ -45,12 +43,6 @@ class OrbitController {
         let x = this._orbitAmplitude * Math.cos(theta);
         let y = this._orbitAmplitude * Math.sin(theta);
 
-        if(this._first === true && this._object.name === "Mercury"){
-            console.log(theta, time, (360 / this._object.orbitalPeriod))
-            console.log(x, y)
-            this._first = false;
-        }
-
         this._object.theta = theta;
 
         x = Number.parseFloat(x.toFixed(COORDINATE_PRECISION));
@@ -58,10 +50,6 @@ class OrbitController {
 
         this._object.threeObject.position.set(x, y, 0);
         this._object.core.position.set(x, y, 0);
-
-        // if (this._object.objectCentroid) {
-        //     this._object.objectCentroid.position.set(x, y, 0);
-        // }
         
         this.setOrbitInclination();
 
@@ -79,10 +67,6 @@ class OrbitController {
     setOrbitInclination() {
         this._object.orbitCentroid.rotation.set(THREE.Math.degToRad(this._object.orbitalInclination), 0, 0);
         this._object.orbitCentroid.updateMatrixWorld();
-        // if(this._object.name === "Mercury"){
-        //     console.log(this._object.orbitCentroid);
-        //     console.log(this._object)
-        // }
     }
 }
 

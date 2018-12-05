@@ -48,9 +48,6 @@ class Orbit {
                     0
                 )
             );
-            if(this._object.name === "Mercury"){
-                console.log(Math.cos(segment)*orbitAmplitude, Math.sin(segment)*orbitAmplitude," ", segment, i)
-            }
         }
 
         let line = new THREE.Line(orbitLine, material);
