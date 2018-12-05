@@ -32,6 +32,7 @@ class RenderController {
     render() {
         this._renderEngine.setAnimationLoop(()=>{
             document.dispatchEvent(new CustomEvent('frame'));
+            TWEEN.update();
             this._renderEngine.render(this._scene, this._camera);
         })
     }
@@ -52,7 +53,6 @@ function onPointerRestricted() {
 
     var pointerLockElement = renderer.domElement;
     if ( pointerLockElement && typeof ( pointerLockElement.requestPointerLock ) === 'function' ) {
-        console.log('ASDASDASDASDASDASDASDASDASD');
         pointerLockElement.requestPointerLock();
 
     }

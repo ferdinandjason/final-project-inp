@@ -7,46 +7,39 @@
     <title>Control</title>
 </head>
 <body>
-    <button id='Merkurius'>1</button>
-    <button id='Venus'>2</button>
-    <button id='Earth'>3</button>
-    <button id='Mars'>4</button>
+    <button id='1'>Merkurius</button>
+    <button id='2'>Venus</button>
+    <button id='3'>Earth</button>
+    <button id='4'>Mars</button>
     <script src="http://10.151.34.209:8080/socket.io.js"></script>
     <script>
         'use strict'
         var socket = new io();
 
         socket.connect('http://10.151.34.209:8080'); 
-
-        // Add a connect listener
-        socket.on('connect',function() {
-            console.log('Client has connected to the server!');
-        });
-        // Add a connect listener
-        socket.on('message',function(data) {
-            console.log('Received a message from the server!',data);
-        });
-        // Add a disconnect listener
-        socket.on('disconnect',function() {
-            console.log('The client has disconnected!');
-        });
+        socket.emit('create', 'controller');
 
         // Sends a message to the server via sockets
         function sendMessageToServer(message) {
             socket.emit('message', message);
         };
 
-        function clickButton(event){
-            console.log(event)
+        function clickButton(id){
+            console.log(id)
+            socket.emit('button.planet.click', id)
         }
 
         function travelToPlanet(id){
             socket.emit('travel', id)
         }
+        
+        var button = new Array(10)
 
-        var button = document.getElementById('Merkurius');
-        button.onclick = (event) => {
-            console.log(event.srcElement.id)
+        for(var i = 0; i < 4; i++){
+            button[i] = document.getElementById(String(i+1));
+            button[i].onclick = (event) => {
+                clickButton(event.srcElement.id);
+            }
         }
 
         sendMessageToServer('halowwwwwwwwwwwww');

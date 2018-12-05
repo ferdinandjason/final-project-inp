@@ -143,6 +143,8 @@ TWEEN.Tween = function (object, group) {
 	this._group = group || TWEEN;
 	this._id = TWEEN.nextId();
 
+	console.log('ASDADADADFADADADADADQA');
+
 };
 
 TWEEN.Tween.prototype = {
@@ -156,7 +158,7 @@ TWEEN.Tween.prototype = {
 
 	to: function to(properties, duration) {
 
-		this._valuesEnd = properties;
+		this._valuesEnd = properties;console.log(properties)
 
 		if (duration !== undefined) {
 			this._duration = duration;

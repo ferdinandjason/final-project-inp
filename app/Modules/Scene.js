@@ -22,7 +22,7 @@ class Scene extends THREE.Scene {
 
 
         this.setLights();
-        this.setAxis();
+        //this.setAxis();
     }
 
     get camera() {

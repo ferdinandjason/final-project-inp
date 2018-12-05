@@ -13,6 +13,7 @@
 	<script src="http://10.151.34.209:8080/WebVR.js"></script>
 	<script src="http://10.151.34.209:8080/DeviceOrientationControls.js"></script>
 	<script src="http://10.151.34.209:8080/dist/bundle.js"></script>
+	<script src="http://10.151.34.209:8080/socket.io.js"></script>
 	<style>
 		body {
 			/* set margin to 0 and overflow to hidden, to go fullscreen */
@@ -26,6 +27,21 @@
 	<!-- Div which will hold the Output -->
 	<div id="solar-system">
 	</div>
+	<script>
+		'use strict'
+		var socket = new io();
+
+        socket.connect('http://10.151.34.209:8080'); 
+        socket.emit('create', 'vr');
+		
+		socket.on('travel.to.planet', (id) => {
+			var travelStartEvent = new CustomEvent('travel.start', {
+				'detail':id
+			});
+			console.log('!!!!!!!!!!!    asdasdasdasd');
+			this.dispatchEvent(travelStartEvent);
+		})
+	</script>
 </body>
 
 </html>

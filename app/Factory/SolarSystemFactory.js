@@ -100,16 +100,18 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
 
     console.log(this.scene.camera, "camera")
     this.scene.camera.add(crosshair);
-    this.scene.cameraWrapper.rotation.z = THREE.Math.degToRad(115)
-    this.scene.cameraWrapper.rotation.x = THREE.Math.degToRad(-30) 
-    this.scene.cameraWrapper.rotation.y = THREE.Math.degToRad(60)
+    this.scene.cameraWrapper.up = new THREE.Vector3(-1, 0, 0);
+    // this.scene.cameraWrapper.rotation.z = THREE.Math.degToRad(115)
+    // this.scene.cameraWrapper.rotation.x = THREE.Math.degToRad(-30) 
+    // this.scene.cameraWrapper.rotation.z = THREE.Math.degToRad(90)
     this.scene.cameraWrapper.position.set(60000,0,15000);
     
+    this.scene.cameraWrapper.lookAt(new THREE.Vector3())
     this.scene.cameraWrapper.updateMatrixWorld();
 
     this.scene.add(this.scene.cameraWrapper)
 
-    // this.scene.rotation.x = 90
+    // this.scene.rotation.z = THREE.Math.degToRad(90)
     // this.scene.rotation.y = 30
     // this.scene.rotation.z = 270
 
