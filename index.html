@@ -8,13 +8,17 @@
 	<meta http-equiv="origin-trial" data-feature="WebXR Device API (For Chrome M69+)" data-expires="2019-01-07" content="ArPzyYNrUDiXsGOh647Ya7MtVUA1nM+WFMnPWu7eoF2nQHOP6mTATIbiv0w+k2kFaPofZG/04ZEQdsACq4IA0wQAAABTeyJvcmlnaW4iOiJodHRwczovL3RocmVlanMub3JnOjQ0MyIsImZlYXR1cmUiOiJXZWJYUkRldmljZU02OSIsImV4cGlyeSI6MTU0Njg4MzAxOH0=">
 	<!-- Origin Trial Token, feature = WebXR Gamepad Support, origin = https://threejs.org, expires = 2019-01-07 -->
 	<meta http-equiv="origin-trial" data-feature="WebXR Gamepad Support" data-expires="2019-01-07" content="Av16a8LVXasKVQV9j3u0OlXdTfz5O9qDqhROyL5Up6R3sdOPbtFuc6n6o5DHitwnb5VdirH0GyvROwvz8xxd0AkAAABYeyJvcmlnaW4iOiJodHRwczovL3RocmVlanMub3JnOjQ0MyIsImZlYXR1cmUiOiJXZWJYUkdhbWVwYWRTdXBwb3J0IiwiZXhwaXJ5IjoxNTQ2ODgzMDE4fQ==">
-	<script src="http://10.151.34.209:8080/Tween.js"></script>
-	<script src="http://10.151.34.209:8080/three.min.js"></script>
-	<script src="http://10.151.34.209:8080/WebVR.js"></script>
-	<script src="http://10.151.34.209:8080/DeviceOrientationControls.js"></script>
-	<script src="http://10.151.33.42:8080/three-text2d.min.js"></script>
-	<script src="http://10.151.33.42:8080/THREE.Text.js"></script>
-	<script src="http://10.151.34.209:8080/socket.io.js"></script>>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="http://10.151.253.254:8080/Tween.js"></script>
+	<script src="http://10.151.253.254:8080/three.min.js"></script>
+	<script src="http://10.151.253.254:8080/WebVR.js"></script>
+	<script src="http://10.151.253.254:8080/DeviceOrientationControls.js"></script>
+	<script src="http://10.151.253.254:8080/three-text2d.min.js"></script>
+	<script src="http://10.151.253.254:8080/THREE.Text.js"></script>
+	<script src="http://10.151.253.254:8080/socket.io.js"></script>
+	<script src="http://10.151.253.254:8080/jquery.js"></script>
 	<style>
 		body {
 			/* set margin to 0 and overflow to hidden, to go fullscreen */
@@ -24,7 +28,16 @@
 	</style>
 </head>
 
-<body>
+<body onload="progressBar();" style="background-color: black; background-image: url(http://10.151.253.254:8080/assets/pic/bg1.jpg);">
+	<div id="ui" style="color: white; text-align: center; margin: 5%;">
+		<p style="font-size: 55px; font-weight: bold; font-family: Helvetica; font-variant: small-caps;">Our Solar System</p>
+		<p id="LText" style="font-size: 20px; margin-top: 2%; font-weight: bold; font-family: Helvetica; font-variant: small-caps;">Building ...</p>
+		<div class="progress" style="height: 30px;margin-top: 1%;">
+			<div id="myBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="10" aria-valuemax="100" style="width:1%">
+			</div>
+		</div>
+		<p style="font-size: 12px; font-weight: bold; font-family: Helvetica; font-variant: small-caps; margin-top: 25%;">Designed By.<br>Ferdinand Jason G. | Yoshima S. Putri | Jonathan Rehuel | Aldinata Rizky R.</p>
+	</div>
 	<!-- Div which will hold the Output -->
 	<div id="solar-system">
 	</div>
@@ -33,8 +46,8 @@
 		'use strict'
 		var socket = new io();
 
-        socket.connect('http://10.151.34.209:8080'); 
-        socket.emit('create', 'vr');
+		socket.connect('http://10.151.253.254:8080'); 
+		socket.emit('create', 'vr');
 		
 		socket.on('travel.to.planet', (id) => {
 			var travelStartEvent = new CustomEvent('travel.start', {
@@ -43,6 +56,50 @@
 			console.log('!!!!!!!!!!!    asdasdasdasd');
 			this.dispatchEvent(travelStartEvent);
 		})
+
+		$(".accordion-content").hide();
+
+		$(".accordion-item").click(function() {
+			var planet_val = $(this).attr('value');
+			planet_val = "#"+planet_val;
+			console.log(planet_val);
+			$(planet_val).slideToggle( "slow", function() {
+		// Animation complete.
+			if (planet_val=="#Merkurius") {
+				$("").hide();
+			}
+		});
+		});
+
+		function progressBar() {
+			var elem = document.getElementById("myBar");   
+			var width = 1;
+			var loadText = document.getElementById("LText");
+			var text = ["Building Merkurius . . .", "Building Venus . . .", "Building Earth . . .", "Building Moon . . .", "Building Mars . . .", "Building Phobos . . .", "Building Deimos . . .", "Building Jupiter . . .", "Building Europa . . .", "Building Io . . .", "Building Ganymede . . .", "Building Callisto . . .", "Building Amalthea . . .", "Building Adrastea . . .", "Building Lysithea . . .", "Building Leda . . .", "Building Anake . . .", "Building Carme . . .", "Building Pasiphae . . .", "Building Elara . . .", "Building Themisto . . .", "Building Himalia . . .", "Building Metis . . .", "Building Thebe . . .", "Building Dia . . .", "Building Carpo . . .", "Building Euporie . . .", "Building Thelxinoe . . .", "Building Euanthe . . .", "Building Helike . . .", "Building Praxidike . . .", "Building Sinope . . .", "Building Pasithee . . .", "Building Thyone . . .", "Building Aitne . . .", "Building Chaldene . . .", "Building Megaclite . . .", "Building Saturnus . . .", "Building Uranus . . .", "Building Neptunus . . .", "Building Pluto . . ."];
+			// var initText = -1;
+
+			var id = setInterval(frame, 50);
+			function frame() {
+				if (width >= 100) {
+					clearInterval(id);
+				} else {
+					width++; 
+						elem.style.width = width + '%'; 
+				}
+			}
+
+			var i = -1;
+			var loadingText = setInterval(myTimer, 125);
+			function myTimer(){
+				if(width >= 100){
+					clearInterval(loadingText)
+				} else {
+					i++;
+					// console.log("INI IIII ", i)
+					loadText.innerHTML = text[i];
+				}
+			}
+		}
 	</script>
 </body>
 

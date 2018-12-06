@@ -5,12 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Control</title>
+    <style>
+        .planet {
+          display: inline-block;
+          padding: 15px 25px;
+          font-size: 24px;
+          cursor: pointer;
+          text-align: center;
+          text-decoration: none;
+          outline: none;
+          color: #fff;
+          background-color: #4CAF50;
+          border: none;
+          border-radius: 15px;
+          box-shadow: 0 9px #999;
+        }
+        .planet:hover {background-color: #3e8e41}
+        .planet:active {
+          background-color: #3e8e41;
+          box-shadow: 0 5px #666;
+          transform: translateY(4px);
+        }
+
+        .satellite {
+          display: inline-block;
+          border-radius: 4px;
+          background-color: #f4511e;
+          border: none;
+          color: #FFFFFF;
+          text-align: center;
+          font-size: 28px;
+          padding: 20px;
+          width: 200px;
+          transition: all 0.5s;
+          cursor: pointer;
+          margin: 5px;
+        }
+        .satellite span {
+          cursor: pointer;
+          display: inline-block;
+          position: relative;
+          transition: 0.5s;
+        }
+        .satellite span:after {
+          content: '\00bb';
+          position: absolute;
+          opacity: 0;
+          top: 0;
+          right: -20px;
+          transition: 0.5s;
+        }
+        .satellite:hover span {
+          padding-right: 25px;
+        }
+        .satellite:hover span:after {
+          opacity: 1;
+          right: 0;
+        }
+    </style>
 </head>
 <body>
-    <button id='1'>Merkurius</button>
-    <button id='2'>Venus</button>
-    <button id='3'>Earth</button>
-    <button id='4'>Mars</button>
+    <button class='planet' id='1'>Mercury</button>
+    <br><br>
+    <button class='planet' id='2'>Venus</button>
+    <br><br>
+    <button class='planet' id='3'>Earth</button>
+    <button class='satellite' id='31'>Moon</button>
+    <br><br>
+    <button class='planet' id='4'>Mars</button>
+    <button class='satellite' id='41'>Phobos</button>
+    <button class='satellite' id='42'>Deimos</button>
+    <br><br>
+    <button class='planet' id='5'>Jupiter</button>
+    <button class='satellite' id='51'>Io</button>
+    <button class='satellite' id='52'>Europa</button>
+    <button class='satellite' id='53'>Ganymede</button>
+    <button class='satellite' id='54'>Cllisto</button>
+    <br><br>
+    <button class='planet' id='6'>Saturn</button>
+    <button class='satellite' id='61'>Mimas</button>
+    <button class='satellite' id='62'>Enceladus</button>
+    <button class='satellite' id='63'>Tethys</button>
+    <button class='satellite' id='64'>Dione</button>
+    <button class='satellite' id='65'>Rhea</button>
+    <button class='satellite' id='66'>Titan</button>
+    <button class='satellite' id='67'>Hyperion</button>
+    <button class='satellite' id='68'>Lapetus</button>
+    <br><br>
+    <button class='planet' id='7'>Uranus</button>
+    <button class='satellite' id='71'>Miranda</button>
+    <button class='satellite' id='72'>Ariel</button>
+    <button class='satellite' id='73'>Umbriel</button>
+    <button class='satellite' id='74'>Titania</button>
+    <button class='satellite' id='75'>Oberon</button>
+    <br><br>
+    <button class='planet' id='8'>Neptune</button>
+    <button class='satellite' id='81'>Triton</button>
+    <br><br>
+    <button class='planet' id='9'>Pluto</button>
+    <button class='satellite' id='91'><span>Charon </span></button>
     <script src="http://10.151.34.209:8080/socket.io.js"></script>
     <script>
         'use strict'
@@ -42,7 +135,7 @@
             }
         }
 
-        sendMessageToServer('halowwwwwwwwwwwww');
+        sendMessageToServer('The Jorney of Solar System');
     </script>
 </body>
 </html>
