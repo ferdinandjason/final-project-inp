@@ -84,10 +84,6 @@ SolarSystemFactory.prototype.build = function(data) {
 };
 
 SolarSystemFactory.prototype.renderScene = function(startTime) {
-    //let focalpoint = this.scene;
-
-    //focalpoint.add(this.scene.camera);
-
     let crosshair = new THREE.Mesh(
         new THREE.RingBufferGeometry( 0.02, 0.04, 32 ),
         new THREE.MeshBasicMaterial( {
@@ -97,36 +93,23 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
         } )
     );
     crosshair.position.z = -2;
-
-    console.log(this.scene.camera, "camera")
-    this.scene.camera.add(crosshair);
-    
-    // this.scene.cameraWrapper.rotation.z = THREE.Math.degToRad(115)
-    // this.scene.cameraWrapper.rotation.x = THREE.Math.degToRad(-30) 
-    // this.scene.cameraWrapper.rotation.z = THREE.Math.degToRad(90)
+	this.scene.camera.add(crosshair);
+	
     this.scene.cameraWrapper.position.set(60000,0,15000);
-    
     this.scene.cameraWrapper.lookAt(new THREE.Vector3())
-
-    this.scene.cameraWrapper.rotation.x = THREE.Math.degToRad(-90);
-
     this.scene.cameraWrapper.updateMatrixWorld();
 
     console.log('camera desu', this.scene.cameraWrapper.uuid);
 
     this.scene.add(this.scene.cameraWrapper)
-
-    // this.scene.rotation.z = THREE.Math.degToRad(90)
-    // this.scene.rotation.y = 30
-    // this.scene.rotation.z = 270
-
-    console.log(crosshair);
+	console.log(crosshair);
 
     let renderController = new RenderController(this.scene);
     let keyboardController = new KeyboardController({
         scene: this.scene,
         sceneObjects: this.solarSystemObjects
-    });
+	});
+
 
     document.onkeypress = keyboardController.handleKeyDown.bind(keyboardController);
     document.onkeyup = keyboardController.handleKeyUp.bind(keyboardController);
@@ -354,6 +337,7 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
 	// this.sprite.scale.set(1.5, 1.5, 1.5)
 	// this.sprite.material.alphaTest = 0.1
 	// this.scene.add(this.sprite)
+}
 
 SolarSystemFactory.prototype.buildMoons = function(planetData, planet) {
 	for(let i = 0; i < planetData.satellites.length; i++) {

@@ -33,6 +33,7 @@ class RenderController {
         this._renderEngine.setAnimationLoop(()=>{
             document.dispatchEvent(new CustomEvent('frame'));
             TWEEN.update();
+            //window.solarSystemFactory.scene.cameraWrapper.rotation.x = THREE.Math.degToRad(180)
             this._renderEngine.render(this._scene, this._camera);
         })
     }

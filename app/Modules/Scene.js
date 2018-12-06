@@ -11,18 +11,12 @@ class Scene extends THREE.Scene {
     constructor(){
         super();
 
-        this._sceneElement = document.getElementById('solar-system');
+        this._sceneElement = document.getElementById('solar-system')
         this._camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.05, 5 * Math.pow(10, 13));
         this._cameraWrapper = new THREE.Group();
         this._cameraWrapper.add(this._camera);
-        // this._orbitControls = new OrbitControls(this._camera, this._sceneElement);
-        // this.controls = new THREE.DeviceOrientationControls(this._camera);
-        // this._orbitControls.screenSpacePanning = true;
-        // this._orbitControls.zoomSpeed = 0.5;
-
 
         this.setLights();
-        //this.setAxis();
     }
 
     get camera() {
@@ -40,11 +34,6 @@ class Scene extends THREE.Scene {
     get sceneElement() {
         return this._sceneElement   
     }
-
-    setCamera() {
-        this._camera.position.set(0, 0, 300);
-        this._camera.lookAt(new THREE.Vector3(0, 0, 0));
-    };
 
     setLights() {
         for(let i = 0; i < AMBIENT_LIGHT_COUNTS; i++) {
@@ -70,11 +59,6 @@ class Scene extends THREE.Scene {
                 object.position.set(-10000, 0, 0);
                 break;
         }
-    }
-
-    setAxis() {
-        this.rotation.x = THREE.Math.degToRad(-90);
-        this.rotation.y = THREE.Math.degToRad(22.5);
     }
 }
 
