@@ -3,8 +3,8 @@
 class RenderController {
     constructor(scene) {
         this._renderEngine = new THREE.WebGLRenderer();
-        this._renderEngine.vr.enabled = true;
-        document.body.appendChild( WEBVR.createButton( this._renderEngine ) );
+        // this._renderEngine.vr.enabled = true;
+        // document.body.appendChild( WEBVR.createButton( this._renderEngine ) );
         this._scene = scene;
         this._camera = scene.camera;
 

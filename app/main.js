@@ -29,13 +29,13 @@ axios.get('data/solarsystem.json')
         
         window.solarSystemData = response.data;
         window.solarSystemFactory = new SolarSystemFactory(solarSystemData);
+        window.travelController = new TravelController(window.solarSystemFactory.scene)
 
         window.solarSystemFactory.build(solarSystemData).then(() => {
             console.log('Success');
             window.addEventListener('travel.start', (event) => {
-                let travelController = new TravelController(window.solarSystemFactory.scene)
                 let target = matchTarget(Number.parseInt(event.detail));
-                travelController.travelToPlanet(
+                window.travelController.travelToPlanet(
                     target,
                     target.threeDiameter * 2.5
                 );

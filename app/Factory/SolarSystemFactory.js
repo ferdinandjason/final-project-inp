@@ -78,7 +78,7 @@ SolarSystemFactory.prototype.build = function(data) {
 				}, buildMap[i].timeout)
 			} else {
 				this.renderScene(startTime);
-				resolve();
+				return resolve();
 			}
 		}
 
@@ -87,6 +87,8 @@ SolarSystemFactory.prototype.build = function(data) {
 };
 
 SolarSystemFactory.prototype.renderScene = function(startTime) {
+	let renderController = new RenderController(this.scene);
+
     let crosshair = new THREE.Mesh(
         new THREE.RingBufferGeometry( 0.02, 0.04, 32 ),
         new THREE.MeshBasicMaterial( {
@@ -98,16 +100,15 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
     crosshair.position.z = -2;
 	this.scene.camera.add(crosshair);
 	
+	this.scene.cameraWrapper.up.set(0, 0, 1);
     this.scene.cameraWrapper.position.set(60000,0,15000);
-    this.scene.cameraWrapper.lookAt(new THREE.Vector3())
-    this.scene.cameraWrapper.updateMatrixWorld();
+    this.scene.cameraWrapper.lookAt(new THREE.Vector3());
 
-    console.log('camera desu', this.scene.cameraWrapper.uuid);
+    //console.log('camera desu', this.scene.cameraWrapper.uuid);
 
     this.scene.add(this.scene.cameraWrapper)
-	console.log(crosshair);
+	//console.log(crosshair);
 
-    let renderController = new RenderController(this.scene);
     let keyboardController = new KeyboardController({
         scene: this.scene,
         sceneObjects: this.solarSystemObjects
@@ -116,8 +117,6 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
 
     document.onkeypress = keyboardController.handleKeyDown.bind(keyboardController);
     document.onkeyup = keyboardController.handleKeyUp.bind(keyboardController);
-
-
 }
 
 SolarSystemFactory.prototype.buildMoons = function(planetData, planet) {
