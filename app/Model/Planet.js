@@ -4,7 +4,7 @@ import CelestialObject from './CelestialObject';
 import Orbit from './Orbit';
 
 import Constants from '../Utils/Constants';
-import RadialRingGeometry from '../Utils/RadialRingGeometry';
+import RadialRingGeometry from './RadialRingGeometry';
 
 const ORBIT_HIGHLIGHT_COLOR = "#2d2d2d";
 const PLANET_HIGHLIGHT_COLOR = "#ffbd00";
@@ -338,7 +338,6 @@ class Planet extends CelestialObject {
         line.position.set(0, 0, 0);
   
         this._core.add(line);
-        console.log(this._core);
   
         return line;
     }

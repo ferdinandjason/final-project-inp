@@ -53,9 +53,6 @@ class KuiperBeltFactory {
             document.addEventListener('frame', (e)=> {
                 this._orbitCentroid.rotation.z += THREE.Math.degToRad(0.002);
             }, false);
-
-            console.log('kuiperr');
-
             resolve();
         });
     }

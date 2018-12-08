@@ -13,9 +13,9 @@ class Scene extends THREE.Scene {
 
         this._sceneElement = document.getElementById('solar-system')
         this._camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.05, 5 * Math.pow(10, 13));
-        //this._cameraWrapper = new THREE.Group();
-        //this._cameraWrapper.add(this._camera);
-        this._cameraWrapper = this.camera;
+        // this._cameraWrapper = new THREE.Group();
+        // this._cameraWrapper.add(this._camera);
+        this._cameraWrapper = this._camera;
 
         this.setLights();
         this.setAxis();

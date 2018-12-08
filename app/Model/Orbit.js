@@ -7,8 +7,6 @@ class Orbit {
         this._object = object;
         this._color = color || new THREE.Color(ORBIT_COLOR);
         this._orbit = this.createOrbit();
-
-        console.log(this._object.threeParent.threeRadius + this._object.threeDistanceFromParent, this._object.name)
     }
 
     /**

@@ -7,7 +7,7 @@ class TravelController {
     }
 
     calculateDestinationCoordinates(targetObject){
-        var target = new THREE.Vector3().setFromMatrixPosition(targetObject.threeObject.matrixWorld)
+        var target = targetObject.threeObject.getWorldPosition();
 
         var x = target.x;
         var y = target.y;
@@ -17,37 +17,41 @@ class TravelController {
         var destinationY = y;
         var destinationZ = z;
 
-        var quadrant1 = x > 0 && y > 0;
-        var quadrant2 = x < 0 && y > 0;
-        var quadrant3 = x < 0 && y < 0;
-        var quadrant4 = x > 0 && y < 0;
+        var quadrant1 = x > 0 && z > 0;
+        var quadrant2 = x < 0 && z > 0;
+        var quadrant3 = x < 0 && z < 0;
+        var quadrant4 = x > 0 && z < 0;
 
-        var offset = target.threeDiameter > 3 ? target.threeDiameter * 3 : target.threeDiameter * 3;
+        var offset = targetObject.threeDiameter > 3 ? targetObject.threeDiameter * 3 : targetObject.threeDiameter * 3;
 
         if (quadrant1) {
             destinationX = destinationX + offset;
-            destinationY = destinationY + offset;
+            destinationZ = destinationZ + offset;
         }
 
         if (quadrant2) {
             destinationX = destinationX - offset;
-            destinationY = destinationY + offset;
+            destinationZ = destinationZ + offset;
         }
 
         if (quadrant3) {
             destinationX = destinationX - offset;
-            destinationY = destinationY - offset;
+            destinationZ = destinationZ - offset;
         }
 
         if (quadrant4) {
             destinationX = destinationX + offset;
-            destinationY = destinationY - offset;
+            destinationZ = destinationZ - offset;
         }
 
         let destination = new THREE.Vector3();
         destination.x = destinationX;
-        destination.y = destinationY;// - (target.threeDiameter);
-        destination.z = destinationZ + (target.threeDiameter * 0.15);
+        destination.y = destinationY + (targetObject.threeDiameter * 0.15);
+        destination.z = destinationZ;
+
+        console.log(destination);
+        destination.applyMatrix4(new THREE.Matrix4().getInverse(this.scene.matrixWorld));
+        console.log(destination);
 
         return destination;
     }
@@ -71,11 +75,11 @@ class TravelController {
     travelToPlanet(targetObject, takeOffHeight) {
         let travelDuration = 5000;
 
-        THREE.SceneUtils.detach(this.camera, this.camera.parent, this.scene);
-        THREE.SceneUtils.attach(this.camera, this.scene, targetObject.orbitCentroid);
+        // THREE.SceneUtils.detach(this.camera, this.camera.parent, this.scene);
+        // THREE.SceneUtils.attach(this.camera, this.scene, targetObject.orbitCentroid);
         
-        targetObject.core.updateMatrixWorld();
-        targetObject.orbitCentroid.updateMatrixWorld();
+        // targetObject.core.updateMatrixWorld();
+        // targetObject.orbitCentroid.updateMatrixWorld();
     
         this.camera.lookAt(targetObject.threeObject.position);
 
@@ -83,6 +87,8 @@ class TravelController {
         let takeOff = this.prepareForTravel(takeOffHeight, targetObject);
 
         let cameraTarget = targetObject instanceof Moon? targetObject.core : targetObject.objectCentroid;
+
+        console.log(destinationCoordinates);
         
         return takeOff.start().onComplete(()=> {
             var cameraTween = new TWEEN.Tween(this.camera.position)
@@ -91,7 +97,7 @@ class TravelController {
                 .onUpdate(function(currentAnimationPosition){
                     cameraTween.to(destinationCoordinates);
 
-                    this.camera.lookAt(targetObject.threeObject.position);
+                    this.camera.lookAt(targetObject.threeObject.getWorldPosition());
 
                     if (targetObject.highlight.geometry.boundingSphere.radius > targetObject.threeDiameter / 1.25) {
                         this.updateTargetHighlight(targetObject);
@@ -106,14 +112,8 @@ class TravelController {
 
     handleComplete(targetObject, cameraTarget){
         cameraTarget = cameraTarget || targetObject.objectCentroid;
-
-        THREE.SceneUtils.detach(this.camera, this.camera.parent, this.scene);
-        THREE.SceneUtils.attach(this.camera, this.scene, cameraTarget);
-
-        this.camera.lookAt(new THREE.Vector3());
-
-        targetObject.core.updateMatrixWorld();
-        targetObject.orbitCentroid.updateMatrixWorld();
+        this.camera.lookAt(targetObject.threeObject.getWorldPosition());
+        targetObject.highlight.material.opacity = 0;
     }
 
     updateTargetHighlight(target) {
