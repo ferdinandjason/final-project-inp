@@ -21,6 +21,13 @@ function matchTarget(id) {
         }
     }
 
+    for(var i = 0; i < window.solarSystemFactory.solarSystemObjects.moons.length; i++){
+        console.log(window.solarSystemFactory.solarSystemObjects.moons[i].id)
+        if(window.solarSystemFactory.solarSystemObjects.moons[i].id === id){
+            return window.solarSystemFactory.solarSystemObjects.moons[i];
+        }
+    }
+
     return target;
 }
 
