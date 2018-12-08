@@ -124,7 +124,7 @@
                 for(var j = 0; j < data.planets[i].satellites.length; j++){
                     var moonId = data.planets[i].satellites[j].id;
                     var moonName = data.planets[i].satellites[j].name;
-                    stringButtonMoons += `<button onclick=clickButton(${moonId}) class='satellite' id='${moonId}'>${moonName}</button>`;
+                    stringButtonMoons += `<button onclick=clickButton('${moonId}') class='satellite' id='${moonId}'>${moonName}</button>`;
                 }
             }
             tabelElement.innerHTML += `<tr><td>${i+1}</td><td>${stringButtonPlanet}</td><td>${stringButtonMoons}</td></tr>`;
