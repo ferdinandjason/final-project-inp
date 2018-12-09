@@ -33,6 +33,8 @@ function SolarSystemFactory(data) {
 		planets: [],
 		moons: [],
 	}; 
+
+	this.solarSystemThreeObjects = [];
 }
 
 SolarSystemFactory.prototype.build = function(data) {
@@ -87,7 +89,7 @@ SolarSystemFactory.prototype.build = function(data) {
 SolarSystemFactory.prototype.renderScene = function(startTime) {
 	this.scene.add(this.scene.cameraWrapper)
 
-	this.menuController = new MenuController({scene: this.scene});
+	this.menuController = new MenuController({scene: this.scene, objectThree: this.solarSystemThreeObjects});
 	this.menuController.initUserInterface();
 
 	let renderController = new RenderController(this.scene, this.menuController);
@@ -133,6 +135,7 @@ SolarSystemFactory.prototype.buildMoons = function(planetData, planet) {
 		let orbitControlMoon = new OrbitController(moon)
 
 		this.solarSystemObjects.moons.push(moon);
+		this.solarSystemThreeObjects.push(moon.threeObject);
 
 		planet._moons.push(moon);
 		planet.core.add(moon.orbitCentroid);
@@ -146,6 +149,7 @@ SolarSystemFactory.prototype.buildPlanet = function(data, sun) {
 		let orbitControllerPlanet = new OrbitController(planet);
 
 		this.scene.add(planet.orbitCentroid);
+		this.solarSystemThreeObjects.push(planet.threeObject);
 
 		if (data.satellites.length) {
 			this.buildMoons(data, planet);
@@ -180,6 +184,7 @@ SolarSystemFactory.prototype.buildSun = function(parentData) {
 	let sun = new Sun(parentData);
 
 	this.solarSystemObjects.sun = sun;
+	this.solarSystemThreeObjects.push(sun.threeObject);
 
 	return sun;
 }

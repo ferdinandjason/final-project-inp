@@ -50,6 +50,7 @@ class TravelController {
         destination.z = destinationZ;
 
         console.log(destination);
+        console.log(targetObject);
         destination.applyMatrix4(new THREE.Matrix4().getInverse(this.scene.matrixWorld));
         console.log(destination);
 
@@ -80,8 +81,10 @@ class TravelController {
         
         // targetObject.core.updateMatrixWorld();
         // targetObject.orbitCentroid.updateMatrixWorld();
+        let targetWorldPosition = new THREE.Vector3();
+        targetObject.threeObject.getWorldPosition(targetWorldPosition);
     
-        this.camera.lookAt(targetObject.threeObject.position);
+        this.camera.lookAt(targetWorldPosition);
 
         let destinationCoordinates  = this.calculateDestinationCoordinates(targetObject);
         let takeOff = this.prepareForTravel(takeOffHeight, targetObject);
@@ -97,7 +100,7 @@ class TravelController {
                 .onUpdate(function(currentAnimationPosition){
                     cameraTween.to(destinationCoordinates);
 
-                    this.camera.lookAt(targetObject.threeObject.getWorldPosition());
+                    this.camera.lookAt(targetWorldPosition);
 
                     if (targetObject.highlight.geometry.boundingSphere.radius > targetObject.threeDiameter / 1.25) {
                         this.updateTargetHighlight(targetObject);
@@ -112,7 +115,7 @@ class TravelController {
 
     handleComplete(targetObject, cameraTarget){
         cameraTarget = cameraTarget || targetObject.objectCentroid;
-        this.camera.lookAt(targetObject.threeObject.getWorldPosition());
+        this.camera.lookAt(cameraTarget.getWorldPosition());
         targetObject.highlight.material.opacity = 0;
     }
 

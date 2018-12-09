@@ -163,6 +163,7 @@ class Planet extends CelestialObject {
         );
         this._orbitCentroid.name = this._name;
         this._threeObject.name = this._name;
+        this._threeObject.idPlanet = this._id;
     }
 
     createThreeDiameter() {
