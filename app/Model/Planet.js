@@ -161,11 +161,8 @@ class Planet extends CelestialObject {
             this._orbitLine.orbit,
             this._objectCentroid
         );
-
-        this._threeObject.name = "THREE OBJ";
-        this._core.name = "CORE";
-        this._orbitLine.orbit.name = "ASD";
-        this._objectCentroid.name = "OBJ CENTROID";
+        this._orbitCentroid.name = this._name;
+        this._threeObject.name = this._name;
     }
 
     createThreeDiameter() {

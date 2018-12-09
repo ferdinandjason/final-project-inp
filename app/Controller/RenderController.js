@@ -1,11 +1,11 @@
 'use strict'
 
 class RenderController {
-    constructor(scene) {
+    constructor(scene, menuController) {
         this._renderEngine = new THREE.WebGLRenderer();
         this._renderEngine.setPixelRatio( window.devicePixelRatio );
-        // this._renderEngine.vr.enabled = true;
-        // document.body.appendChild( WEBVR.createButton( this._renderEngine ) );
+        this._renderEngine.vr.enabled = true;
+        document.body.appendChild( WEBVR.createButton( this._renderEngine ) );
         this._scene = scene;
         this._camera = scene.camera;
 
@@ -24,13 +24,15 @@ class RenderController {
         this.render();
 
         this.frameEvent = new CustomEvent('frame');
+
+        this.menuController = menuController;
     }
 
     render() {
         this._renderEngine.setAnimationLoop(()=>{
             document.dispatchEvent(this.frameEvent);
             TWEEN.update();
-            //window.solarSystemFactory.scene.cameraWrapper.rotation.x = THREE.Math.degToRad(180)
+            this.menuController.updateUserInterface();
             this._renderEngine.render(this._scene, this._camera);
         })
     }

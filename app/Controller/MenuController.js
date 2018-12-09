@@ -1,4 +1,4 @@
-import TextCanvas from "../Model/TextCanvas";
+import TextGeometry from "../Model/TextGeometry";
 
 class MenuController {
     constructor(options){
@@ -6,9 +6,12 @@ class MenuController {
         this._camera = options.scene.camera;
 
         this._raycaster = new THREE.Raycaster();
-        this._raycaster.setFromCamera( { x: 0, y: 0 }, this._camera );
 
-        this.textCanvas = null;
+        this._textGeo = new TextGeometry({
+            name : 'Solar-System'
+        });
+
+        this.intersect = null;
     }
 
     get scene() {
@@ -19,16 +22,26 @@ class MenuController {
         return this._camera;
     }
 
-    initializeUserInferface(){
-        this.textCanvas = new TextCanvas({
-            name : 'Welcome'
-        })
-        this.scene.add(this.textCanvas.group);
-        this.scene.add(this.textCanvas.spritey);
+    get textGeo() {
+        return this._textGeo;
+    }
+
+    initUserInterface() {
+        this._camera.add(this.textGeo.group);
     }
 
     updateUserInterface() {
-
+        this._raycaster.setFromCamera( { x: 0, y: 0 }, this._camera );
+        this.intersect = this._raycaster.intersectObjects(this._scene.children, true);
+        console.log(this.intersect);
+        if(this.intersect.length && this._textGeo.text != this.intersect[0].object.name){
+            //console.log(this.intersect[0].object.name);
+            this._textGeo.text = this.intersect[0].object.name
+            while(this._textGeo.group.children.length){
+                this._textGeo.group.remove(this._textGeo.group.children[0]);
+            }
+            this._textGeo.createText();
+        }
     }
 }
 

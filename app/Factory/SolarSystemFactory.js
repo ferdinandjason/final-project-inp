@@ -12,15 +12,13 @@ import Sun from '../Model/Sun';
 
 import OrbitController from '../Controller/OrbitController';
 import RenderController from '../Controller/RenderController';
-import keyboardController from '../Controller/KeyboardController';
+import MenuController from '../Controller/MenuController';
 
 import Scene from '../Modules/Scene';
 
 import StarFactory from './StarFactory';
 import AsteroidBeltFactory from './AsteroidBeltFactory';
 import KuiperBeltFactory from './KuiperBeltFactory';
-
-import objectText from '../Model/TextCanvas';
 
 import KeyboardController from '../Controller/KeyboardController';
 
@@ -89,7 +87,10 @@ SolarSystemFactory.prototype.build = function(data) {
 SolarSystemFactory.prototype.renderScene = function(startTime) {
 	this.scene.add(this.scene.cameraWrapper)
 
-	let renderController = new RenderController(this.scene);
+	this.menuController = new MenuController({scene: this.scene});
+	this.menuController.initUserInterface();
+
+	let renderController = new RenderController(this.scene, this.menuController);
 
     let crosshair = new THREE.Mesh(
         new THREE.RingBufferGeometry( 0.02, 0.04, 32 ),
@@ -116,7 +117,7 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
 
     document.onkeypress = keyboardController.handleKeyDown.bind(keyboardController);
 	document.onkeyup = keyboardController.handleKeyUp.bind(keyboardController);
-	
+
 	window.buildComplete();
 }
 
