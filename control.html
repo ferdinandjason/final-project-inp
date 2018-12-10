@@ -12,59 +12,65 @@
         .planet {
           display: inline-block;
           padding: 15px 25px;
-          font-size: 24px;
+          width: 200px;
+          font-size: 30px;
           cursor: pointer;
           text-align: center;
+          border-radius: 20px;
+          border: none;
+          background-color: #2095C1;
+          color: #fff;
+          font-weight: 700; 
+          box-shadow: 0 7px #999;
           text-decoration: none;
           outline: none;
-          color: #fff;
-          background-color: #4CAF50;
-          border: none;
-          border-radius: 15px;
-          box-shadow: 0 9px #999;
         }
-        .planet:hover {background-color: #3e8e41}
+        .planet:hover {background-color: #0F5590}
         .planet:active {
-          background-color: #3e8e41;
-          box-shadow: 0 5px #666;
-          transform: translateY(4px);
+          background-color: #0F5590;
+          box-shadow: 0 4px #555;
+          transform: translateY(7px);
         }
 
         .satellite {
           display: inline-block;
-          border-radius: 4px;
-          background-color: #f4511e;
-          border: none;
-          color: #FFFFFF;
-          text-align: center;
-          font-size: 28px;
-          padding: 20px;
+          padding: 15px 25px;
           width: 200px;
-          transition: all 0.5s;
+          font-size: 27px;
           cursor: pointer;
+          text-align: center;
+          border-radius: 50px;
+          border: none;
+          background-color: #F27395;
+          color: #fff;
+          font-weight: 530;
+          text-decoration: none;
+          outline: none;
+          transition: all 0.6s;
           margin: 5px;
         }
         .satellite span {
           cursor: pointer;
           display: inline-block;
           position: relative;
-          transition: 0.5s;
+          transition: 0.6s;
         }
         .satellite span:after {
           content: '\00bb';
           position: absolute;
           opacity: 0;
           top: 0;
-          right: -20px;
-          transition: 0.5s;
+          right: -5px;
+          transition: 0.6s;
         }
         .satellite:hover span {
-          padding-right: 25px;
+          padding-right: 20px;
         }
         .satellite:hover span:after {
           opacity: 1;
           right: 0;
         }
+        .satellite:hover{background-color: #A0529D;}
     </style>
 </head>
 <body>
@@ -72,20 +78,24 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Planet</th>
-                <th scope="col">Bulan</th>
+                <th scope="col">PLANET</th>
+                <th scope="col">SATELIT</th>
             </tr>
         </thead>
         <tbody id='button-data'>
 
         </tbody>
     </table>
-    <script src="http://10.151.33.42:8080/socket.io.js"></script>
+
+    <script src="http://10.151.254.214:8080/socket.io.js"></script>
+
     <script>
         'use strict'
         var socket = new io();
 
-        socket.connect('http://10.151.33.42:8080'); 
+
+        socket.connect('http://10.151.252.208:8080'); 
+
         socket.emit('create', 'controller');
 
         // Sends a message to the server via sockets
@@ -124,7 +134,7 @@
                 for(var j = 0; j < data.planets[i].satellites.length; j++){
                     var moonId = data.planets[i].satellites[j].id;
                     var moonName = data.planets[i].satellites[j].name;
-                    stringButtonMoons += `<button onclick=clickButton('${moonId}') class='satellite' id='${moonId}'>${moonName}</button>`;
+                    stringButtonMoons += `<button onclick=clickButton('${moonId}') class='satellite' id='${moonId}'><span>${moonName}</span></button>`;
                 }
             }
             tabelElement.innerHTML += `<tr><td>${i+1}</td><td>${stringButtonPlanet}</td><td>${stringButtonMoons}</td></tr>`;

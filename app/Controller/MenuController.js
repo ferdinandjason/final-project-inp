@@ -7,7 +7,7 @@ class MenuController {
         this._threeObject = options.objectThree
 
         this._raycaster = new THREE.Raycaster();
-        this._raycaster.far = 10;
+        this._raycaster.far = 200;
 
         this._textGeo = new TextGeometry({
             name : ' '
@@ -34,13 +34,36 @@ class MenuController {
             '9' : new THREE.TextureLoader().load('../../assets/infografis/9.png')
         }
 
+        this.audio = {
+            '1' : new Audio('../../assets/audio/1.mp3'),
+            '2' : new Audio('../../assets/audio/2.mp3'),
+            '3' : new Audio('../../assets/audio/3.mp3'),
+            '3a' : new Audio('../../assets/audio/3a.mp3'),
+            '4' : new Audio('../../assets/audio/4.mp3'),
+            '5' : new Audio('../../assets/audio/5.mp3'),
+            '5a' : new Audio('../../assets/audio/5a.mp3'),
+            '5b' : new Audio('../../assets/audio/5b.mp3'),
+            '5c' : new Audio('../../assets/audio/5c.mp3'),
+            '6' : new Audio('../../assets/audio/6.mp3'),
+            '6g' : new Audio('../../assets/audio/6g.mp3'),
+            '6j' : new Audio('../../assets/audio/6j.mp3'),
+            'gk' : new Audio('../../assets/audio/6k.mp3'),
+            '6l' : new Audio('../../assets/audio/6l.mp3'),
+            '6n' : new Audio('../../assets/audio/6n.mp3'),
+            '7' : new Audio('../../assets/audio/7.mp3'),
+            '8' : new Audio('../../assets/audio/8.mp3'),
+            '9' : new Audio('../../assets/audio/9.mp3'),
+        }
+
         this._infografis = new THREE.Mesh(
-            new THREE.PlaneGeometry(15, 20),
+            new THREE.PlaneGeometry(20, 5),
             new THREE.MeshBasicMaterial({
                 map : this.textureMap['0'],
+                transparent : true,
+                opacity : 0.5,
             })
         );
-        this._infografis.position.set(-15, 0, -25);
+        this._infografis.position.set(0, -8, -25);
         this._infografis.visible = false;
 
         this.intersect = null;
@@ -77,6 +100,7 @@ class MenuController {
             this._infografis.material.needsUpdate = true;
             this._infografis.visible = true;
             if(!this._infografis.material.map) this._infografis.visible = false;
+            this.audio[this.intersect[0].object.idPlanet].play();
         } else if(!this.intersect.length && this._textGeo.text != ' ') {
             this._textGeo.text = ' '
             while(this._textGeo.group.children.length){
