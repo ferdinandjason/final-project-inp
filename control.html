@@ -86,12 +86,16 @@
 
         </tbody>
     </table>
+
     <script src="http://10.151.254.214:8080/socket.io.js"></script>
+
     <script>
         'use strict'
         var socket = new io();
 
-        socket.connect('http://10.151.254.214:8080'); 
+
+        socket.connect('http://10.151.252.208:8080'); 
+
         socket.emit('create', 'controller');
 
         // Sends a message to the server via sockets
