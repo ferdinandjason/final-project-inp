@@ -11,15 +11,15 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="http://10.151.33.42:8080/Tween.js"></script>
-	<script src="http://10.151.33.42:8080/three.min.js"></script>
-	<script src="http://10.151.33.42:8080/SceneUtils.js"></script>
-	<script src="http://10.151.33.42:8080/WebVR.js"></script>
-	<script src="http://10.151.33.42:8080/DeviceOrientationControls.js"></script>
-	<script src="http://10.151.33.42:8080/three-text2d.min.js"></script>
-	<script src="http://10.151.33.42:8080/THREE.Text.js"></script>
-	<script src="http://10.151.33.42:8080/socket.io.js"></script>
-	<script src="http://10.151.33.42:8080/jquery.js"></script>
+	<script src="http://10.151.254.214:8080/Tween.js"></script>
+	<script src="http://10.151.254.214:8080/three.min.js"></script>
+	<script src="http://10.151.254.214:8080/SceneUtils.js"></script>
+	<script src="http://10.151.254.214:8080/WebVR.js"></script>
+	<script src="http://10.151.254.214:8080/DeviceOrientationControls.js"></script>
+	<script src="http://10.151.254.214:8080/three-text2d.min.js"></script>
+	<script src="http://10.151.254.214:8080/THREE.Text.js"></script>
+	<script src="http://10.151.254.214:8080/socket.io.js"></script>
+	<script src="http://10.151.254.214:8080/jquery.js"></script>
 	<style>
 		body {
 			/* set margin to 0 and overflow to hidden, to go fullscreen */
@@ -29,7 +29,7 @@
 	</style>
 </head>
 
-<body style="background-color: black; background-image: url(http://10.151.33.42:8080/assets/pic/bg1.jpg);">
+<body style="background-color: black; background-image: url(http://10.151.254.214:8080/assets/pic/bg1.jpg);">
 	<div id="ui" style="color: white; text-align: center; margin: 5%;">
 		<p style="font-size: 55px; font-weight: bold; font-family: Helvetica; font-variant: small-caps;">Our Solar System</p>
 		<p id="LText" style="font-size: 20px; margin-top: 2%; font-weight: bold; font-family: Helvetica; font-variant: small-caps;">Building ...</p>
@@ -74,12 +74,12 @@
 			document.getElementById('bar').style.visibility = "hidden"
 		}
 	</script>
-	<script src="http://10.151.33.42:8080/dist/bundle.js"></script>
+	<script src="http://10.151.254.214:8080/dist/bundle.js"></script>
 	<script>
 		'use strict'
 		var socket = new io();
 
-		socket.connect('http://10.151.33.42:8080'); 
+		socket.connect('http://10.151.254.214:8080'); 
 		socket.emit('create', 'vr');
 		
 		socket.on('travel.to.planet', (id) => {
