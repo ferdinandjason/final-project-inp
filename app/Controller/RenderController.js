@@ -4,8 +4,8 @@ class RenderController {
     constructor(scene, menuController) {
         this._renderEngine = new THREE.WebGLRenderer();
         this._renderEngine.setPixelRatio( window.devicePixelRatio );
-        // this._renderEngine.vr.enabled = true;
-        // document.body.appendChild( WEBVR.createButton( this._renderEngine ) );
+        this._renderEngine.vr.enabled = true;
+        document.body.appendChild( WEBVR.createButton( this._renderEngine ) );
         this._scene = scene;
         this._camera = scene.camera;
 
