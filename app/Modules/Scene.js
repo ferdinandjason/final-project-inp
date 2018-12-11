@@ -15,8 +15,10 @@ class Scene extends THREE.Scene {
         this._camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.05, 5 * Math.pow(10, 13));
         this._cameraWrapper = new THREE.Group();
         this._cameraWrapper.add(this._camera);
+        // this._cameraWrapper = this._camera;
 
         this.setLights();
+        this.setAxis();
     }
 
     get camera() {
@@ -34,6 +36,11 @@ class Scene extends THREE.Scene {
     get sceneElement() {
         return this._sceneElement   
     }
+
+    setAxis() {
+        this.rotation.x = THREE.Math.degToRad(90);
+    }
+
 
     setLights() {
         for(let i = 0; i < AMBIENT_LIGHT_COUNTS; i++) {

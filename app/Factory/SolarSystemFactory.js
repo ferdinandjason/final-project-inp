@@ -12,15 +12,13 @@ import Sun from '../Model/Sun';
 
 import OrbitController from '../Controller/OrbitController';
 import RenderController from '../Controller/RenderController';
-import keyboardController from '../Controller/KeyboardController';
+import MenuController from '../Controller/MenuController';
 
 import Scene from '../Modules/Scene';
 
 import StarFactory from './StarFactory';
 import AsteroidBeltFactory from './AsteroidBeltFactory';
 import KuiperBeltFactory from './KuiperBeltFactory';
-
-import objectText from './objectText';
 
 import KeyboardController from '../Controller/KeyboardController';
 
@@ -35,6 +33,8 @@ function SolarSystemFactory(data) {
 		planets: [],
 		moons: [],
 	}; 
+
+	this.solarSystemThreeObjects = [];
 }
 
 SolarSystemFactory.prototype.build = function(data) {
@@ -78,7 +78,7 @@ SolarSystemFactory.prototype.build = function(data) {
 				}, buildMap[i].timeout)
 			} else {
 				this.renderScene(startTime);
-				resolve();
+				return resolve();
 			}
 		}
 
@@ -87,6 +87,13 @@ SolarSystemFactory.prototype.build = function(data) {
 };
 
 SolarSystemFactory.prototype.renderScene = function(startTime) {
+	this.scene.add(this.scene.cameraWrapper)
+
+	this.menuController = new MenuController({scene: this.scene, objectThree: this.solarSystemThreeObjects});
+	this.menuController.initUserInterface();
+
+	let renderController = new RenderController(this.scene, this.menuController);
+
     let crosshair = new THREE.Mesh(
         new THREE.RingBufferGeometry( 0.02, 0.04, 32 ),
         new THREE.MeshBasicMaterial( {
@@ -95,19 +102,15 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
             transparent: true
         } )
     );
-    crosshair.position.z = -2;
+	crosshair.position.z = -2;
 	this.scene.camera.add(crosshair);
 	
+	this.scene.cameraWrapper.up.set(0, -1, 0);
     this.scene.cameraWrapper.position.set(60000,0,15000);
-    this.scene.cameraWrapper.lookAt(new THREE.Vector3())
-    this.scene.cameraWrapper.updateMatrixWorld();
+	this.scene.cameraWrapper.lookAt(new THREE.Vector3());
 
-    console.log('camera desu', this.scene.cameraWrapper.uuid);
+    //console.log('camera desu', this.scene.cameraWrapper.uuid);
 
-    this.scene.add(this.scene.cameraWrapper)
-	console.log(crosshair);
-
-    let renderController = new RenderController(this.scene);
     let keyboardController = new KeyboardController({
         scene: this.scene,
         sceneObjects: this.solarSystemObjects
@@ -115,9 +118,9 @@ SolarSystemFactory.prototype.renderScene = function(startTime) {
 
 
     document.onkeypress = keyboardController.handleKeyDown.bind(keyboardController);
-    document.onkeyup = keyboardController.handleKeyUp.bind(keyboardController);
+	document.onkeyup = keyboardController.handleKeyUp.bind(keyboardController);
 
-
+	window.buildComplete();
 }
 
 SolarSystemFactory.prototype.buildMoons = function(planetData, planet) {
@@ -132,9 +135,11 @@ SolarSystemFactory.prototype.buildMoons = function(planetData, planet) {
 		let orbitControlMoon = new OrbitController(moon)
 
 		this.solarSystemObjects.moons.push(moon);
+		this.solarSystemThreeObjects.push(moon.threeObject);
 
 		planet._moons.push(moon);
 		planet.core.add(moon.orbitCentroid);
+		window.updateProgressBar(moon.name)
 	}
 }
 
@@ -144,6 +149,7 @@ SolarSystemFactory.prototype.buildPlanet = function(data, sun) {
 		let orbitControllerPlanet = new OrbitController(planet);
 
 		this.scene.add(planet.orbitCentroid);
+		this.solarSystemThreeObjects.push(planet.threeObject);
 
 		if (data.satellites.length) {
 			this.buildMoons(data, planet);
@@ -161,6 +167,7 @@ SolarSystemFactory.prototype.buildPlanets = function(planets, sun) {
 
 		for(let i = 0; i < planets.length; i++) {
 			promises.push(this.buildPlanet(planets[i], sun).then((planet) => {
+				window.updateProgressBar(planet.name)
 				this.solarSystemObjects.planets.push(planet);
 			}))
 		}
@@ -177,6 +184,7 @@ SolarSystemFactory.prototype.buildSun = function(parentData) {
 	let sun = new Sun(parentData);
 
 	this.solarSystemObjects.sun = sun;
+	this.solarSystemThreeObjects.push(sun.threeObject);
 
 	return sun;
 }
@@ -186,6 +194,7 @@ SolarSystemFactory.prototype.buildStars = function() {
 
 	return new Promise((resolve)=> {
 		starFactory.buildStarField().then(()=> {
+			window.updateProgressBar('Star-Field Sphere')
 			resolve({
 				group: 'stars',
 			});
@@ -198,6 +207,7 @@ SolarSystemFactory.prototype.buildKuiperBelt = function(data) {
 
 	return new Promise((resolve)=> {
 		kuiperBeltFactory.build().then(()=> {
+			window.updateProgressBar('Kuiper Belt')
 			resolve({
 				group: 'kuiper',
 			});
@@ -210,6 +220,7 @@ SolarSystemFactory.prototype.buildAsteroidBelt = function(data) {
 
 	return new Promise((resolve)=> {
 		asteroidBeltFactory.build().then(()=> {
+			window.updateProgressBar('Asteroid Belt')
 			resolve({
 				group: 'asteroids',
 			});

@@ -4,7 +4,7 @@ import CelestialObject from './CelestialObject';
 import Orbit from './Orbit';
 
 import Constants from '../Utils/Constants';
-import RadialRingGeometry from '../Utils/RadialRingGeometry';
+import RadialRingGeometry from './RadialRingGeometry';
 
 const ORBIT_HIGHLIGHT_COLOR = "#2d2d2d";
 const PLANET_HIGHLIGHT_COLOR = "#ffbd00";
@@ -161,11 +161,9 @@ class Planet extends CelestialObject {
             this._orbitLine.orbit,
             this._objectCentroid
         );
-
-        this._threeObject.name = "THREE OBJ";
-        this._core.name = "CORE";
-        this._orbitLine.orbit.name = "ASD";
-        this._objectCentroid.name = "OBJ CENTROID";
+        this._orbitCentroid.name = this._name;
+        this._threeObject.name = this._name;
+        this._threeObject.idPlanet = this._id;
     }
 
     createThreeDiameter() {
@@ -338,7 +336,6 @@ class Planet extends CelestialObject {
         line.position.set(0, 0, 0);
   
         this._core.add(line);
-        console.log(this._core);
   
         return line;
     }

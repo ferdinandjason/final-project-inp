@@ -21,6 +21,13 @@ function matchTarget(id) {
         }
     }
 
+    for(var i = 0; i < window.solarSystemFactory.solarSystemObjects.moons.length; i++){
+        console.log(window.solarSystemFactory.solarSystemObjects.moons[i].id)
+        if(window.solarSystemFactory.solarSystemObjects.moons[i].id === id){
+            return window.solarSystemFactory.solarSystemObjects.moons[i];
+        }
+    }
+
     return target;
 }
 
@@ -29,13 +36,13 @@ axios.get('data/solarsystem.json')
         
         window.solarSystemData = response.data;
         window.solarSystemFactory = new SolarSystemFactory(solarSystemData);
+        window.travelController = new TravelController(window.solarSystemFactory.scene)
 
         window.solarSystemFactory.build(solarSystemData).then(() => {
-            console.log('Success');
+            console.log('Building Complete');
             window.addEventListener('travel.start', (event) => {
-                let travelController = new TravelController(window.solarSystemFactory.scene)
-                let target = matchTarget(Number.parseInt(event.detail));
-                travelController.travelToPlanet(
+                let target = matchTarget(event.detail);
+                window.travelController.travelToPlanet(
                     target,
                     target.threeDiameter * 2.5
                 );

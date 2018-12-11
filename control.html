@@ -4,112 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <title>Control</title>
     <style>
         .planet {
           display: inline-block;
           padding: 15px 25px;
-          font-size: 24px;
+          width: 200px;
+          font-size: 30px;
           cursor: pointer;
           text-align: center;
+          border-radius: 20px;
+          border: none;
+          background-color: #2095C1;
+          color: #fff;
+          font-weight: 700; 
+          box-shadow: 0 7px #999;
           text-decoration: none;
           outline: none;
-          color: #fff;
-          background-color: #4CAF50;
-          border: none;
-          border-radius: 15px;
-          box-shadow: 0 9px #999;
         }
-        .planet:hover {background-color: #3e8e41}
+        .planet:hover {background-color: #0F5590}
         .planet:active {
-          background-color: #3e8e41;
-          box-shadow: 0 5px #666;
-          transform: translateY(4px);
+          background-color: #0F5590;
+          box-shadow: 0 4px #555;
+          transform: translateY(7px);
         }
 
         .satellite {
           display: inline-block;
-          border-radius: 4px;
-          background-color: #f4511e;
-          border: none;
-          color: #FFFFFF;
-          text-align: center;
-          font-size: 28px;
-          padding: 20px;
+          padding: 15px 25px;
           width: 200px;
-          transition: all 0.5s;
+          font-size: 27px;
           cursor: pointer;
-          margin: 5px;
+          text-align: center;
+          border-radius: 50px;
+          border: none;
+          background-color: #F27395;
+          color: #fff;
+          font-weight: 530;
+          box-shadow: 0 7px #999;
+          text-decoration: none;
+          outline: none;
+          transition: all 0.6s;
+          margin: 7px;
         }
         .satellite span {
           cursor: pointer;
           display: inline-block;
           position: relative;
-          transition: 0.5s;
+          transition: 0.6s;
         }
         .satellite span:after {
           content: '\00bb';
           position: absolute;
           opacity: 0;
           top: 0;
-          right: -20px;
-          transition: 0.5s;
+          right: -5px;
+          transition: 0.6s;
         }
         .satellite:hover span {
-          padding-right: 25px;
+          padding-right: 20px;
         }
         .satellite:hover span:after {
           opacity: 1;
           right: 0;
         }
+        .satellite:hover{background-color: #A0529D;}
+
+        .table{
+          vertical-align: middle;
+        }
+        td {
+          font-size: 30px;
+          font-weight: 300;
+          color: #715097;
+          border-bottom: 0px solid #ddd;
+          border-top: 0px solid #ddd;
+        }
+        th {
+          background-color: #715097;
+          color: #fff;
+          text-align: center;
+          font-size: 30px;
+        }
     </style>
 </head>
-<body>
-    <button class='planet' id='1'>Mercury</button>
-    <br><br>
-    <button class='planet' id='2'>Venus</button>
-    <br><br>
-    <button class='planet' id='3'>Earth</button>
-    <button class='satellite' id='31'>Moon</button>
-    <br><br>
-    <button class='planet' id='4'>Mars</button>
-    <button class='satellite' id='41'>Phobos</button>
-    <button class='satellite' id='42'>Deimos</button>
-    <br><br>
-    <button class='planet' id='5'>Jupiter</button>
-    <button class='satellite' id='51'>Io</button>
-    <button class='satellite' id='52'>Europa</button>
-    <button class='satellite' id='53'>Ganymede</button>
-    <button class='satellite' id='54'>Cllisto</button>
-    <br><br>
-    <button class='planet' id='6'>Saturn</button>
-    <button class='satellite' id='61'>Mimas</button>
-    <button class='satellite' id='62'>Enceladus</button>
-    <button class='satellite' id='63'>Tethys</button>
-    <button class='satellite' id='64'>Dione</button>
-    <button class='satellite' id='65'>Rhea</button>
-    <button class='satellite' id='66'>Titan</button>
-    <button class='satellite' id='67'>Hyperion</button>
-    <button class='satellite' id='68'>Lapetus</button>
-    <br><br>
-    <button class='planet' id='7'>Uranus</button>
-    <button class='satellite' id='71'>Miranda</button>
-    <button class='satellite' id='72'>Ariel</button>
-    <button class='satellite' id='73'>Umbriel</button>
-    <button class='satellite' id='74'>Titania</button>
-    <button class='satellite' id='75'>Oberon</button>
-    <br><br>
-    <button class='planet' id='8'>Neptune</button>
-    <button class='satellite' id='81'>Triton</button>
-    <br><br>
-    <button class='planet' id='9'>Pluto</button>
-    <button class='satellite' id='91'><span>Charon </span></button>
-    <script src="http://10.151.34.209:8080/socket.io.js"></script>
+<body style="background-image: url('../../assets/pic/1.jpg'); background-attachment: fixed; background-size: 100%;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+                <th scope="col">PLANET</th>
+                <th scope="col">SATELLITE</th>
+            </tr>
+        </thead>
+        <tbody id='button-data'>
+
+        </tbody>
+    </table>
+
+    <script src="http://10.151.254.214:8080/socket.io.js"></script>
+
     <script>
         'use strict'
         var socket = new io();
 
-        socket.connect('http://10.151.34.209:8080'); 
+
+        socket.connect('http://10.151.252.208:8080'); 
+
         socket.emit('create', 'controller');
 
         // Sends a message to the server via sockets
@@ -125,17 +129,34 @@
         function travelToPlanet(id){
             socket.emit('travel', id)
         }
-        
-        var button = new Array(10)
-
-        for(var i = 0; i < 4; i++){
-            button[i] = document.getElementById(String(i+1));
-            button[i].onclick = (event) => {
-                clickButton(event.srcElement.id);
-            }
-        }
 
         sendMessageToServer('The Jorney of Solar System');
+    </script>
+    <script>
+        var request = new XMLHttpRequest();
+        var data;
+        request.open('GET', './data/solarsystem.json', false)
+        request.send()
+        if(request.status === 200){
+            data = JSON.parse(request.responseText);
+        }
+
+        var tabelElement = document.getElementById('button-data');
+
+        for(var i = 0; i < data.planets.length; i++){
+            var planetId = data.planets[i].id;
+            var planetName = data.planets[i].name;
+            var stringButtonPlanet = `<button onclick=clickButton(${planetId}) class='planet' id='${planetId}'>${planetName}</button>`;
+            var stringButtonMoons = '';
+            if(data.planets[i].satellites.length){
+                for(var j = 0; j < data.planets[i].satellites.length; j++){
+                    var moonId = data.planets[i].satellites[j].id;
+                    var moonName = data.planets[i].satellites[j].name;
+                    stringButtonMoons += `<button onclick=clickButton('${moonId}') class='satellite' id='${moonId}'><span>${moonName}</span></button>`;
+                }
+            }
+            tabelElement.innerHTML += `<tr><td></td><td>${stringButtonPlanet}</td><td>${stringButtonMoons}</td></tr>`;
+        }
     </script>
 </body>
 </html>

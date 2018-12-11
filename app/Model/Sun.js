@@ -9,7 +9,7 @@ const DISTANCE_TO_KUIPER_BELT = 7479893535; // Kuiper Belt radius
 class Sun extends CelestialObject {
     constructor(data) {
         super(data.diameter, data.mass, data.gravity, data.density);
-
+        console.log(data);
         this._id = data.id || null;
         this._name = data.name || null;
         this._rotationPeriod = data.rotationPeriod || null;
@@ -38,6 +38,10 @@ class Sun extends CelestialObject {
     get threeObject() {
         return this._threeObject;
     };
+
+    get name() {
+        return this._name;
+    }
   
     getTexture(src) {
         if (src) {
@@ -75,6 +79,7 @@ class Sun extends CelestialObject {
         mesh.rotation.x = THREE.Math.degToRad(90);
   
         mesh.add(sunLight);
+        mesh.name = this._name;
   
         return mesh;
     };

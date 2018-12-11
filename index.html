@@ -11,14 +11,17 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="http://10.151.253.254:8080/Tween.js"></script>
-	<script src="http://10.151.253.254:8080/three.min.js"></script>
-	<script src="http://10.151.253.254:8080/WebVR.js"></script>
-	<script src="http://10.151.253.254:8080/DeviceOrientationControls.js"></script>
-	<script src="http://10.151.253.254:8080/three-text2d.min.js"></script>
-	<script src="http://10.151.253.254:8080/THREE.Text.js"></script>
-	<script src="http://10.151.253.254:8080/socket.io.js"></script>
-	<script src="http://10.151.253.254:8080/jquery.js"></script>
+
+	<script src="http://10.151.252.208:8080/Tween.js"></script>
+	<script src="http://10.151.252.208:8080/three.min.js"></script>
+	<script src="http://10.151.252.208:8080/SceneUtils.js"></script>
+	<script src="http://10.151.252.208:8080/WebVR.js"></script>
+	<script src="http://10.151.252.208:8080/DeviceOrientationControls.js"></script>
+	<script src="http://10.151.252.208:8080/three-text2d.min.js"></script>
+	<script src="http://10.151.252.208:8080/THREE.Text.js"></script>
+	<script src="http://10.151.252.208:8080/socket.io.js"></script>
+	<script src="http://10.151.252.208:8080/jquery.js"></script>
+
 	<style>
 		body {
 			/* set margin to 0 and overflow to hidden, to go fullscreen */
@@ -28,11 +31,13 @@
 	</style>
 </head>
 
-<body onload="progressBar();" style="background-color: black; background-image: url(http://10.151.253.254:8080/assets/pic/bg1.jpg);">
+
+<body style="background-color: black; background-image: url(http://10.151.252.208:8080/assets/pic/bg1.jpg);">
+
 	<div id="ui" style="color: white; text-align: center; margin: 5%;">
 		<p style="font-size: 55px; font-weight: bold; font-family: Helvetica; font-variant: small-caps;">Our Solar System</p>
 		<p id="LText" style="font-size: 20px; margin-top: 2%; font-weight: bold; font-family: Helvetica; font-variant: small-caps;">Building ...</p>
-		<div class="progress" style="height: 30px;margin-top: 1%;">
+		<div class="progress" id="bar" style="height: 30px;margin-top: 1%;">
 			<div id="myBar" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="10" aria-valuemax="100" style="width:1%">
 			</div>
 		</div>
@@ -41,21 +46,7 @@
 	<!-- Div which will hold the Output -->
 	<div id="solar-system">
 	</div>
-	<script src="http://10.151.34.209:8080/dist/bundle.js"></script>
 	<script>
-		'use strict'
-		var socket = new io();
-
-		socket.connect('http://10.151.253.254:8080'); 
-		socket.emit('create', 'vr');
-		
-		socket.on('travel.to.planet', (id) => {
-			var travelStartEvent = new CustomEvent('travel.start', {
-				'detail':id
-			});
-			console.log('!!!!!!!!!!!    asdasdasdasd');
-			this.dispatchEvent(travelStartEvent);
-		})
 
 		$(".accordion-content").hide();
 
@@ -64,42 +55,47 @@
 			planet_val = "#"+planet_val;
 			console.log(planet_val);
 			$(planet_val).slideToggle( "slow", function() {
-		// Animation complete.
-			if (planet_val=="#Merkurius") {
-				$("").hide();
-			}
-		});
-		});
-
-		function progressBar() {
-			var elem = document.getElementById("myBar");   
-			var width = 1;
-			var loadText = document.getElementById("LText");
-			var text = ["Building Merkurius . . .", "Building Venus . . .", "Building Earth . . .", "Building Moon . . .", "Building Mars . . .", "Building Phobos . . .", "Building Deimos . . .", "Building Jupiter . . .", "Building Europa . . .", "Building Io . . .", "Building Ganymede . . .", "Building Callisto . . .", "Building Amalthea . . .", "Building Adrastea . . .", "Building Lysithea . . .", "Building Leda . . .", "Building Anake . . .", "Building Carme . . .", "Building Pasiphae . . .", "Building Elara . . .", "Building Themisto . . .", "Building Himalia . . .", "Building Metis . . .", "Building Thebe . . .", "Building Dia . . .", "Building Carpo . . .", "Building Euporie . . .", "Building Thelxinoe . . .", "Building Euanthe . . .", "Building Helike . . .", "Building Praxidike . . .", "Building Sinope . . .", "Building Pasithee . . .", "Building Thyone . . .", "Building Aitne . . .", "Building Chaldene . . .", "Building Megaclite . . .", "Building Saturnus . . .", "Building Uranus . . .", "Building Neptunus . . .", "Building Pluto . . ."];
-			// var initText = -1;
-
-			var id = setInterval(frame, 50);
-			function frame() {
-				if (width >= 100) {
-					clearInterval(id);
-				} else {
-					width++; 
-						elem.style.width = width + '%'; 
+			// Animation complete.
+				if (planet_val=="#Merkurius") {
+					$("").hide();
 				}
-			}
+			});
+		});
 
-			var i = -1;
-			var loadingText = setInterval(myTimer, 125);
-			function myTimer(){
-				if(width >= 100){
-					clearInterval(loadingText)
-				} else {
-					i++;
-					// console.log("INI IIII ", i)
-					loadText.innerHTML = text[i];
-				}
-			}
+		window.celestialObjectCount = 0;
+		window.widthProgressBar = 0;
+		window.loadingTextElement = document.getElementById("LText")
+		window.loadingProgressElement = document.getElementById("myBar")
+		window.updateProgressBar = (name) => {
+			window.celestialObjectCount += 1;
+			window.widthProgressBar = Number.parseInt(celestialObjectCount / 114 * 100);
+			window.loadingTextElement.innerHTML = "Building "+name+" . . .";
+			window.loadingProgressElement.style.width = widthProgressBar + '%';
 		}
+		window.buildComplete = () => {
+			window.loadingTextElement.innerHTML = "Building complete .. <br> You can enter VR !";
+			window.loadingProgressElement.style.width = '100%';
+			document.getElementById('bar').style.visibility = "hidden"
+		}
+	</script>
+
+	<script src="http://10.151.252.208:8080/dist/bundle.js"></script>
+
+	<script>
+		'use strict'
+		var socket = new io();
+
+
+		socket.connect('http://10.151.252.208:8080'); 
+
+		socket.emit('create', 'vr');
+		
+		socket.on('travel.to.planet', (id) => {
+			var travelStartEvent = new CustomEvent('travel.start', {
+				'detail':id
+			});
+			this.dispatchEvent(travelStartEvent);
+		})
 	</script>
 </body>
 

@@ -158,6 +158,9 @@ class Moon extends CelestialObject {
             this._core,
             this._orbitLine.orbit
         );
+
+        this._threeObject.name = this._name;
+        this._threeObject.idPlanet = this._id;
     }
 
     createThreeDiameter() {
